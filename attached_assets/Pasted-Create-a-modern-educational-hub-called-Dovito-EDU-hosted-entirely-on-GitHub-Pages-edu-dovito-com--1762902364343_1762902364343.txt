@@ -1,0 +1,64 @@
+Create a modern educational hub called Dovito EDU, hosted entirely on GitHub Pages (edu.dovito.com), using Pages CMS with custom enhancements for flexibility, PWA features, and seamless sharing. Reference designs from the provided URLs (Levoair, Dovito.ai, ReactBits, shadcn/ui, gsap) and closely follow the design and functionality notes below.
+
+Landing Page: Modern design, feature “Get Instant Access” CTAs that link to login/register.​
+
+Login Page: Email/password and Google Auth
+
+Dashboard: Overview of content sections, with quick links to:
+
+“Dovito x Fairway Mortgage AI workshop” — include interactive HTML slide decks for session viewing.
+
+“AI Tools List” — Tabular index of AI tools, each entry to show: name, external link, pricing, features, typical use cases.
+
+“Prompt Library” — Copy, download, and export prompts easily.
+
+“Media Links” — List of accounts on YouTube, Instagram, X, etc., with back links.
+
+Profile Management: Change name and password. No profile picture; display user initials as avatar.​
+
+Housekeeping: Privacy, terms, and contact pages (template — fill later).
+
+Design & Experience
+Emulate the modern look and feel of the provided design references. Prioritize clean, square logos, engaging UI, minimal onboarding friction, and vibrant PWA aesthetics.
+
+Desktop: Left sidebar navigation menu - shadcnUI.
+
+Mobile: Bottom nav menu, resembling app experience.
+
+Full PWA functionality: offline access, installable as home screen app.
+
+Promote social sharing: Quick share buttons for all content, auto-backlinks to platform URL.
+
+Technical/Integrations
+Use GitHub Pages for hosting. All CMS/data storage should be zero-cost, preferably via GitHub itself.​
+
+Integrate Google Analytics GA4.
+
+Keep code extensible: Organize reusable components (suggest leveraging shadcn/ui with Tailwind CSS for base components and custom module creation).​
+
+Accessibility: Add ARIA tags, ensure keyboard navigation, responsive design for all devices.​
+
+Follow best practices in organizing pages, assets, and environments.​
+
+Additional Instructions
+Document code so non-coders understand structure and configuration (comments and Markdown documentation).
+
+Maintain concise, beginner-friendly prose in docs, and leverage diagrams or flowcharts if fields vary in logic.​
+
+Do not implement user-uploaded profile pictures for storage reasons; use initials only.
+
+All media links, resource tables, and prompt management features should make sharing to social platforms frictionless.
+
+Reference and match the layout, colors, fonts, and transitions of the design links above as closely as possible.
+
+All workshop HTML decks must be easily embeddable/downloadable per page.
+
+
+Design references:
+
+https://levoair.com/
+https://github.com/slider003/levoair
+https://dovito.ai/
+https://www.reactbits.dev/
+https://ui.shadcn.com/
+https://gsap.com/
