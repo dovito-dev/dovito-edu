@@ -2,7 +2,6 @@ import { ArrowRight, Presentation, Wrench, FileText, Share2 } from "lucide-react
 import { Link } from "wouter";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-import logoImage from "@assets/generated_images/Dovito_EDU_logo_transparent_36abfbd3.png";
 import { ThemeToggle } from "@/components/ThemeToggle";
 import LightRays from "@/components/LightRays";
 
@@ -36,10 +35,7 @@ export default function Landing() {
         <div className="container mx-auto">
           <div className="bg-card/70 backdrop-blur-xl border border-border rounded-2xl px-6 py-4 shadow-lg">
             <div className="flex items-center justify-between">
-              <div className="flex items-center gap-3">
-                <img src={logoImage} alt="Dovito EDU" className="h-10 w-10 rounded-md" />
-                <h1 className="font-heading font-bold text-xl">Dovito EDU</h1>
-              </div>
+              <h1 className="font-heading font-bold text-xl">Dovito EDU</h1>
               <div className="flex items-center gap-2">
                 <ThemeToggle />
                 <Link href="/login">
