@@ -310,7 +310,16 @@ export async function registerRoutes(app: Express): Promise<Server> {
   app.get("/api/workshops", async (req, res) => {
     try {
       const workshops = await storage.getWorkshops();
-      res.json(workshops);
+      const workshopsWithCounts = await Promise.all(
+        workshops.map(async (workshop) => {
+          const sessions = await storage.getSessionsByWorkshop(workshop.id);
+          return {
+            ...workshop,
+            sessionCount: sessions.length,
+          };
+        })
+      );
+      res.json(workshopsWithCounts);
     } catch (error) {
       res.status(500).json({ message: "Failed to fetch workshops" });
     }

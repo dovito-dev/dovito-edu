@@ -1,48 +1,66 @@
 import { ArrowRight, Presentation, Wrench, FileText, Share2 } from "lucide-react";
 import { Link } from "wouter";
+import { useQuery } from "@tanstack/react-query";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-
-const contentSections = [
-  {
-    title: "Dovito x Fairway Mortgage AI Workshop",
-    description: "Interactive slide decks and comprehensive learning materials",
-    icon: Presentation,
-    url: "/workshop",
-    badge: "12 Sessions",
-    color: "text-blue-600 dark:text-blue-400",
-    bgColor: "bg-blue-50 dark:bg-blue-950",
-  },
-  {
-    title: "AI Tools Directory",
-    description: "Curated index of AI tools with pricing and features",
-    icon: Wrench,
-    url: "/ai-tools",
-    badge: "45+ Tools",
-    color: "text-purple-600 dark:text-purple-400",
-    bgColor: "bg-purple-50 dark:bg-purple-950",
-  },
-  {
-    title: "Prompt Library",
-    description: "Professional prompts ready to copy and use",
-    icon: FileText,
-    url: "/prompts",
-    badge: "100+ Prompts",
-    color: "text-green-600 dark:text-green-400",
-    bgColor: "bg-green-50 dark:bg-green-950",
-  },
-  {
-    title: "Media Links",
-    description: "YouTube, Instagram, X, and more resources",
-    icon: Share2,
-    url: "/media",
-    badge: "5 Platforms",
-    color: "text-orange-600 dark:text-orange-400",
-    bgColor: "bg-orange-50 dark:bg-orange-950",
-  },
-];
+import type { Workshop, AITool, Prompt, Session } from "@shared/schema";
 
 export default function Dashboard() {
+  const { data: workshops = [] } = useQuery<Workshop[]>({
+    queryKey: ["/api/workshops"],
+  });
+
+  const { data: tools = [] } = useQuery<AITool[]>({
+    queryKey: ["/api/ai-tools"],
+  });
+
+  const { data: prompts = [] } = useQuery<Prompt[]>({
+    queryKey: ["/api/prompts"],
+  });
+
+  const totalSessions = workshops.reduce((total, workshop) => {
+    return total + ((workshop as any).sessionCount ?? 0);
+  }, 0);
+
+  const contentSections = [
+    {
+      title: "AI Workshops",
+      description: "Interactive slide decks and comprehensive learning materials",
+      icon: Presentation,
+      url: "/workshop",
+      badge: `${workshops.length} ${workshops.length === 1 ? 'Workshop' : 'Workshops'}`,
+      color: "text-blue-600 dark:text-blue-400",
+      bgColor: "bg-blue-50 dark:bg-blue-950",
+    },
+    {
+      title: "AI Tools Directory",
+      description: "Curated index of AI tools with pricing and features",
+      icon: Wrench,
+      url: "/ai-tools",
+      badge: `${tools.length}+ Tools`,
+      color: "text-purple-600 dark:text-purple-400",
+      bgColor: "bg-purple-50 dark:bg-purple-950",
+    },
+    {
+      title: "Prompt Library",
+      description: "Professional prompts ready to copy and use",
+      icon: FileText,
+      url: "/prompts",
+      badge: `${prompts.length}+ Prompts`,
+      color: "text-green-600 dark:text-green-400",
+      bgColor: "bg-green-50 dark:bg-green-950",
+    },
+    {
+      title: "Media Links",
+      description: "YouTube, Instagram, X, and more resources",
+      icon: Share2,
+      url: "/media",
+      badge: "Social Media",
+      color: "text-orange-600 dark:text-orange-400",
+      bgColor: "bg-orange-50 dark:bg-orange-950",
+    },
+  ];
+
   return (
     <div className="space-y-8">
       <div>
@@ -80,30 +98,26 @@ export default function Dashboard() {
 
       <Card>
         <CardHeader>
-          <CardTitle>Recent Activity</CardTitle>
-          <CardDescription>Your latest interactions and progress</CardDescription>
+          <CardTitle>Quick Stats</CardTitle>
+          <CardDescription>Your educational hub at a glance</CardDescription>
         </CardHeader>
         <CardContent>
-          <div className="space-y-4">
-            <div className="flex items-start gap-3 p-3 rounded-lg bg-muted/50">
-              <div className="p-2 rounded-md bg-background">
-                <Presentation className="h-4 w-4 text-primary" />
-              </div>
-              <div className="flex-1 min-w-0">
-                <p className="font-medium text-sm">Completed Session 3</p>
-                <p className="text-sm text-muted-foreground">AI Workshop - Introduction to LLMs</p>
-                <p className="text-xs text-muted-foreground mt-1">2 hours ago</p>
-              </div>
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+            <div className="text-center p-4 rounded-lg bg-muted/50">
+              <p className="text-3xl font-bold text-primary">{workshops.length}</p>
+              <p className="text-sm text-muted-foreground mt-1">Workshops</p>
             </div>
-            <div className="flex items-start gap-3 p-3 rounded-lg bg-muted/50">
-              <div className="p-2 rounded-md bg-background">
-                <FileText className="h-4 w-4 text-primary" />
-              </div>
-              <div className="flex-1 min-w-0">
-                <p className="font-medium text-sm">Saved 3 new prompts</p>
-                <p className="text-sm text-muted-foreground">Added to your collection</p>
-                <p className="text-xs text-muted-foreground mt-1">Yesterday</p>
-              </div>
+            <div className="text-center p-4 rounded-lg bg-muted/50">
+              <p className="text-3xl font-bold text-primary">{tools.length}</p>
+              <p className="text-sm text-muted-foreground mt-1">AI Tools</p>
+            </div>
+            <div className="text-center p-4 rounded-lg bg-muted/50">
+              <p className="text-3xl font-bold text-primary">{prompts.length}</p>
+              <p className="text-sm text-muted-foreground mt-1">Prompts</p>
+            </div>
+            <div className="text-center p-4 rounded-lg bg-muted/50">
+              <p className="text-3xl font-bold text-primary">{totalSessions}</p>
+              <p className="text-sm text-muted-foreground mt-1">Sessions</p>
             </div>
           </div>
         </CardContent>

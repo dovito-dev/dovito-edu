@@ -8,7 +8,7 @@ const features = [
   {
     icon: Presentation,
     title: "AI Workshop Access",
-    description: "Interactive slide decks and comprehensive learning materials from Dovito x Fairway Mortgage AI workshop.",
+    description: "Interactive slide decks and comprehensive learning materials from Dovito AI workshops.",
   },
   {
     icon: Wrench,

@@ -25,7 +25,7 @@ Preferred communication style: Simple, everyday language.
 - Tailwind CSS with custom design tokens
 - CSS variables for theming (light/dark mode support)
 - Custom spacing system using Tailwind units (3, 4, 6, 8, 12, 16, 20, 24)
-- Typography: Inter for body text, Space Grotesk for headings
+- Typography: Roboto for all text (headings and body)
 - Design inspired by Levoair, Dovito.ai, and shadcn/ui aesthetics
 
 **Component Structure:**
@@ -102,7 +102,7 @@ Preferred communication style: Simple, everyday language.
 - Tailwind CSS for utility-first styling
 - class-variance-authority (cva) for component variants
 - clsx and tailwind-merge for className composition
-- Google Fonts CDN for Inter and Space Grotesk fonts
+- Google Fonts CDN for Roboto font
 
 **Development Tools:**
 - Replit-specific plugins for development environment integration
