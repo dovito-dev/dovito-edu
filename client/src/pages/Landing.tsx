@@ -3,6 +3,7 @@ import { Link } from "wouter";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { ThemeToggle } from "@/components/ThemeToggle";
+import logoPath from "@assets/dovito_edu_1762919756790.png";
 
 const features = [
   {
@@ -34,7 +35,12 @@ export default function Landing() {
         <div className="container mx-auto">
           <div className="bg-card/70 backdrop-blur-xl border border-border rounded-2xl px-6 py-4 shadow-lg">
             <div className="flex items-center justify-between">
-              <h1 className="font-heading font-bold text-xl">Dovito EDU</h1>
+              <div className="flex items-center gap-3">
+                <div className="h-10 w-10 rounded-md overflow-hidden flex items-center justify-center">
+                  <img src={logoPath} alt="Dovito EDU" className="h-full w-full object-cover" />
+                </div>
+                <h1 className="font-heading font-bold text-xl">Dovito EDU</h1>
+              </div>
               <div className="flex items-center gap-2">
                 <ThemeToggle />
                 <Link href="/login">

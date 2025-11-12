@@ -9,6 +9,7 @@ import { Separator } from "@/components/ui/separator";
 import { SiGoogle } from "react-icons/si";
 import { apiRequest } from "@/lib/queryClient";
 import { useToast } from "@/hooks/use-toast";
+import logoPath from "@assets/dovito_edu_1762919756790.png";
 
 export default function Login() {
   const [, setLocation] = useLocation();
@@ -64,6 +65,11 @@ export default function Login() {
     <div className="min-h-screen flex items-center justify-center bg-background p-4">
       <Card className="w-full max-w-md">
         <CardHeader className="text-center space-y-4">
+          <div className="flex justify-center mb-2">
+            <div className="h-12 w-12 rounded-lg overflow-hidden flex items-center justify-center">
+              <img src={logoPath} alt="Dovito EDU" className="h-full w-full object-cover" />
+            </div>
+          </div>
           <CardTitle className="font-heading text-2xl">Welcome Back</CardTitle>
           <CardDescription>
             Sign in to access your educational resources
@@ -130,16 +136,12 @@ export default function Login() {
         <CardFooter className="flex flex-col gap-4">
           <p className="text-sm text-muted-foreground text-center">
             Don't have an account?{" "}
-            <Link href="/register">
-              <a className="text-primary hover:underline" data-testid="link-register">
-                Sign up
-              </a>
+            <Link href="/register" className="text-primary hover:underline" data-testid="link-register">
+              Sign up
             </Link>
           </p>
-          <Link href="/">
-            <a className="text-sm text-muted-foreground hover:text-foreground" data-testid="link-back-home">
-              ← Back to home
-            </a>
+          <Link href="/" className="text-sm text-muted-foreground hover:text-foreground" data-testid="link-back-home">
+            ← Back to home
           </Link>
         </CardFooter>
       </Card>

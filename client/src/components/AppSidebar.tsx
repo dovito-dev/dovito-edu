@@ -16,6 +16,7 @@ import {
 import { UserAvatar } from "./UserAvatar";
 import { apiRequest, queryClient } from "@/lib/queryClient";
 import { useSession } from "@/hooks/useSession";
+import logoPath from "@assets/dovito_edu_1762919756790.png";
 
 const menuItems = [
   { title: "Dashboard", url: "/dashboard", icon: Home },
@@ -58,8 +59,8 @@ export function AppSidebar() {
       <SidebarHeader className="p-4">
         <Link href="/dashboard">
           <button className="flex items-center gap-3 hover-elevate rounded-lg p-2 w-full text-left">
-            <div className="h-10 w-10 rounded-md bg-primary/10 flex items-center justify-center">
-              <span className="font-heading font-bold text-lg text-primary">D</span>
+            <div className="h-10 w-10 rounded-md overflow-hidden flex items-center justify-center">
+              <img src={logoPath} alt="Dovito EDU" className="h-full w-full object-cover" />
             </div>
             <div>
               <h1 className="font-heading font-bold text-lg">Dovito EDU</h1>

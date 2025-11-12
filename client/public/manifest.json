@@ -4,8 +4,8 @@
   "description": "Modern educational hub featuring AI workshops, tools directory, and prompt library",
   "start_url": "/",
   "display": "standalone",
-  "background_color": "#ffffff",
-  "theme_color": "#1E3A8A",
+  "background_color": "#2563eb",
+  "theme_color": "#2563eb",
   "orientation": "portrait-primary",
   "icons": [
     {
