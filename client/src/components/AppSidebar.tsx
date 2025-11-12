@@ -52,7 +52,7 @@ export function AppSidebar() {
     <Sidebar>
       <SidebarHeader className="p-4">
         <Link href="/dashboard">
-          <div className="flex items-center gap-3 hover-elevate rounded-lg p-2">
+          <button className="flex items-center gap-3 hover-elevate rounded-lg p-2 w-full text-left">
             <div className="h-10 w-10 rounded-md bg-primary/10 flex items-center justify-center">
               <span className="font-heading font-bold text-lg text-primary">D</span>
             </div>
@@ -60,7 +60,7 @@ export function AppSidebar() {
               <h1 className="font-heading font-bold text-lg">Dovito EDU</h1>
               <p className="text-xs text-muted-foreground">Learn & Grow</p>
             </div>
-          </div>
+          </button>
         </Link>
       </SidebarHeader>
       <SidebarContent>
@@ -70,14 +70,12 @@ export function AppSidebar() {
             <SidebarMenu>
               {menuItems.map((item) => (
                 <SidebarMenuItem key={item.title}>
-                  <SidebarMenuButton asChild isActive={location === item.url}>
-                    <Link href={item.url}>
-                      <a data-testid={`link-${item.title.toLowerCase().replace(" ", "-")}`}>
-                        <item.icon className="h-4 w-4" />
-                        <span>{item.title}</span>
-                      </a>
-                    </Link>
-                  </SidebarMenuButton>
+                  <Link href={item.url}>
+                    <SidebarMenuButton isActive={location === item.url} data-testid={`link-${item.title.toLowerCase().replace(" ", "-")}`}>
+                      <item.icon className="h-4 w-4" />
+                      <span>{item.title}</span>
+                    </SidebarMenuButton>
+                  </Link>
                 </SidebarMenuItem>
               ))}
             </SidebarMenu>
