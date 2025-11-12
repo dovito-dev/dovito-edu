@@ -1,5 +1,7 @@
 import { useState } from "react";
-import { ExternalLink, Search } from "lucide-react";
+import { ExternalLink, Search, ArrowRight } from "lucide-react";
+import { useQuery } from "@tanstack/react-query";
+import { Link } from "wouter";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -19,73 +21,16 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Card, CardContent } from "@/components/ui/card";
+import type { AITool } from "@shared/schema";
 
-const aiTools = [
-  {
-    id: 1,
-    name: "ChatGPT",
-    category: "Conversational AI",
-    pricing: "Free / $20/mo",
-    features: ["Natural Language", "Code Generation", "Multi-turn Conversations"],
-    useCases: "Content creation, coding assistance, research",
-    link: "https://chat.openai.com",
-  },
-  {
-    id: 2,
-    name: "Midjourney",
-    category: "Image Generation",
-    pricing: "$10-60/mo",
-    features: ["High Quality Images", "Artistic Styles", "Upscaling"],
-    useCases: "Digital art, marketing materials, concept design",
-    link: "https://midjourney.com",
-  },
-  {
-    id: 3,
-    name: "Notion AI",
-    category: "Productivity",
-    pricing: "$10/mo",
-    features: ["Writing Assistant", "Summarization", "Translation"],
-    useCases: "Note-taking, documentation, project management",
-    link: "https://notion.so",
-  },
-  {
-    id: 4,
-    name: "Jasper",
-    category: "Content Writing",
-    pricing: "$49-125/mo",
-    features: ["SEO Optimization", "Templates", "Brand Voice"],
-    useCases: "Marketing copy, blog posts, social media",
-    link: "https://jasper.ai",
-  },
-  {
-    id: 5,
-    name: "GitHub Copilot",
-    category: "Developer Tools",
-    pricing: "$10/mo",
-    features: ["Code Completion", "Multi-language", "Context Aware"],
-    useCases: "Software development, code review, debugging",
-    link: "https://github.com/features/copilot",
-  },
-];
-
-const categories = ["All", "Conversational AI", "Image Generation", "Productivity", "Content Writing", "Developer Tools"];
-const pricingFilters = ["All", "Free", "Paid", "Freemium"];
+const categories = ["All", "Conversational AI", "Image Generation", "Productivity", "Content Writing", "Developer Tools", "Automation", "Writing Assistant", "Transcription", "Video/Audio Editing", "Presentations", "Research", "Video Creation", "Meeting Assistant", "Email Management", "Note-Taking", "Voice AI", "All-in-One Marketing", "Design", "Podcast Production"];
 
 export default function AITools() {
   const [searchQuery, setSearchQuery] = useState("");
   const [categoryFilter, setCategoryFilter] = useState("All");
-  const [pricingFilter, setPricingFilter] = useState("All");
 
-  const filteredTools = aiTools.filter((tool) => {
-    const matchesSearch = tool.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      tool.useCases.toLowerCase().includes(searchQuery.toLowerCase());
-    const matchesCategory = categoryFilter === "All" || tool.category === categoryFilter;
-    const matchesPricing = pricingFilter === "All" || 
-      (pricingFilter === "Free" && tool.pricing.includes("Free")) ||
-      (pricingFilter === "Paid" && !tool.pricing.includes("Free")) ||
-      (pricingFilter === "Freemium" && tool.pricing.includes("Free") && tool.pricing.includes("/"));
-    
-    return matchesSearch && matchesCategory && matchesPricing;
+  const { data: tools = [], isLoading } = useQuery<AITool[]>({
+    queryKey: ["/api/ai-tools", { category: categoryFilter, search: searchQuery }],
   });
 
   return (
@@ -109,7 +54,7 @@ export default function AITools() {
           />
         </div>
         <Select value={categoryFilter} onValueChange={setCategoryFilter}>
-          <SelectTrigger className="w-full md:w-[200px]" data-testid="select-category">
+          <SelectTrigger className="w-full md:w-[240px]" data-testid="select-category">
             <SelectValue placeholder="Category" />
           </SelectTrigger>
           <SelectContent>
@@ -120,19 +65,13 @@ export default function AITools() {
             ))}
           </SelectContent>
         </Select>
-        <Select value={pricingFilter} onValueChange={setPricingFilter}>
-          <SelectTrigger className="w-full md:w-[200px]" data-testid="select-pricing">
-            <SelectValue placeholder="Pricing" />
-          </SelectTrigger>
-          <SelectContent>
-            {pricingFilters.map((filter) => (
-              <SelectItem key={filter} value={filter}>
-                {filter}
-              </SelectItem>
-            ))}
-          </SelectContent>
-        </Select>
       </div>
+
+      {isLoading && (
+        <div className="text-center py-12">
+          <p className="text-muted-foreground">Loading AI tools...</p>
+        </div>
+      )}
 
       <div className="hidden md:block">
         <div className="border rounded-lg overflow-hidden">
@@ -148,9 +87,15 @@ export default function AITools() {
               </TableRow>
             </TableHeader>
             <TableBody>
-              {filteredTools.map((tool) => (
+              {!isLoading && tools.map((tool) => (
                 <TableRow key={tool.id} data-testid={`tool-row-${tool.id}`}>
-                  <TableCell className="font-medium">{tool.name}</TableCell>
+                  <TableCell className="font-medium">
+                    <Link href={`/ai-tools/${tool.id}`}>
+                      <button className="hover:text-primary transition-colors">
+                        {tool.name}
+                      </button>
+                    </Link>
+                  </TableCell>
                   <TableCell>
                     <Badge variant="secondary">{tool.category}</Badge>
                   </TableCell>
@@ -171,15 +116,23 @@ export default function AITools() {
                   </TableCell>
                   <TableCell className="max-w-xs truncate">{tool.useCases}</TableCell>
                   <TableCell className="text-right">
-                    <Button
-                      variant="ghost"
-                      size="sm"
-                      onClick={() => window.open(tool.link, "_blank")}
-                      data-testid={`button-visit-${tool.id}`}
-                    >
-                      Visit
-                      <ExternalLink className="ml-2 h-4 w-4" />
-                    </Button>
+                    <div className="flex items-center gap-2 justify-end">
+                      <Link href={`/ai-tools/${tool.id}`}>
+                        <Button variant="ghost" size="sm" data-testid={`button-details-${tool.id}`}>
+                          Details
+                          <ArrowRight className="ml-2 h-4 w-4" />
+                        </Button>
+                      </Link>
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        onClick={() => window.open(tool.link, "_blank")}
+                        data-testid={`button-visit-${tool.id}`}
+                      >
+                        Visit
+                        <ExternalLink className="ml-2 h-4 w-4" />
+                      </Button>
+                    </div>
                   </TableCell>
                 </TableRow>
               ))}
@@ -189,12 +142,14 @@ export default function AITools() {
       </div>
 
       <div className="md:hidden space-y-4">
-        {filteredTools.map((tool) => (
-          <Card key={tool.id} data-testid={`tool-card-${tool.id}`}>
+        {!isLoading && tools.map((tool) => (
+          <Card key={tool.id} data-testid={`tool-card-${tool.id}`} className="hover-elevate">
             <CardContent className="p-4 space-y-3">
               <div className="flex items-start justify-between">
-                <div>
-                  <h3 className="font-semibold text-lg">{tool.name}</h3>
+                <div className="flex-1">
+                  <Link href={`/ai-tools/${tool.id}`}>
+                    <h3 className="font-semibold text-lg hover:text-primary transition-colors">{tool.name}</h3>
+                  </Link>
                   <Badge variant="secondary" className="mt-1">{tool.category}</Badge>
                 </div>
                 <Button
@@ -213,23 +168,34 @@ export default function AITools() {
               <div>
                 <p className="text-sm font-medium text-muted-foreground mb-2">Features</p>
                 <div className="flex flex-wrap gap-1">
-                  {tool.features.map((feature, idx) => (
+                  {tool.features.slice(0, 3).map((feature, idx) => (
                     <Badge key={idx} variant="outline" className="text-xs">
                       {feature}
                     </Badge>
                   ))}
+                  {tool.features.length > 3 && (
+                    <Badge variant="outline" className="text-xs">
+                      +{tool.features.length - 3}
+                    </Badge>
+                  )}
                 </div>
               </div>
               <div>
                 <p className="text-sm font-medium text-muted-foreground">Use Cases</p>
-                <p className="text-sm">{tool.useCases}</p>
+                <p className="text-sm line-clamp-2">{tool.useCases}</p>
               </div>
+              <Link href={`/ai-tools/${tool.id}`}>
+                <Button variant="outline" size="sm" className="w-full mt-2">
+                  View Details
+                  <ArrowRight className="ml-2 h-4 w-4" />
+                </Button>
+              </Link>
             </CardContent>
           </Card>
         ))}
       </div>
 
-      {filteredTools.length === 0 && (
+      {!isLoading && tools.length === 0 && (
         <div className="text-center py-12">
           <p className="text-muted-foreground">No tools found matching your criteria</p>
         </div>

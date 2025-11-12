@@ -118,6 +118,36 @@ export async function registerRoutes(app: Express): Promise<Server> {
     });
   });
 
+  app.get("/api/ai-tools", async (req, res) => {
+    try {
+      const { category, search } = req.query;
+      
+      const tools = await storage.getAITools({
+        category: category as string | undefined,
+        search: search as string | undefined,
+      });
+
+      res.json(tools);
+    } catch (error) {
+      res.status(500).json({ message: "Failed to fetch AI tools" });
+    }
+  });
+
+  app.get("/api/ai-tools/:id", async (req, res) => {
+    try {
+      const { id } = req.params;
+      
+      const tool = await storage.getAIToolById(id);
+      if (!tool) {
+        return res.status(404).json({ message: "AI tool not found" });
+      }
+
+      res.json(tool);
+    } catch (error) {
+      res.status(500).json({ message: "Failed to fetch AI tool" });
+    }
+  });
+
   const httpServer = createServer(app);
 
   return httpServer;

@@ -15,6 +15,7 @@ import Register from "@/pages/Register";
 import Dashboard from "@/pages/Dashboard";
 import Workshop from "@/pages/Workshop";
 import AITools from "@/pages/AITools";
+import AIToolDetail from "@/pages/AIToolDetail";
 import Prompts from "@/pages/Prompts";
 import Media from "@/pages/Media";
 import Profile from "@/pages/Profile";
@@ -65,6 +66,11 @@ function Router() {
       <Route path="/workshop">
         <AuthenticatedLayout>
           <Workshop />
+        </AuthenticatedLayout>
+      </Route>
+      <Route path="/ai-tools/:id">
+        <AuthenticatedLayout>
+          <AIToolDetail />
         </AuthenticatedLayout>
       </Route>
       <Route path="/ai-tools">

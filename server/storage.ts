@@ -6,6 +6,7 @@ export interface IStorage {
   getUser(id: string): Promise<User | undefined>;
   getUserByEmail(email: string): Promise<User | undefined>;
   createUser(user: InsertUser): Promise<User>;
+  isUserAdmin(userId: string): Promise<boolean>;
   
   getAITools(filters?: { category?: string; search?: string }): Promise<AITool[]>;
   getAIToolById(id: string): Promise<AITool | undefined>;
@@ -25,6 +26,11 @@ export class DbStorage implements IStorage {
   async createUser(insertUser: InsertUser): Promise<User> {
     const [user] = await db.insert(users).values(insertUser).returning();
     return user;
+  }
+
+  async isUserAdmin(userId: string): Promise<boolean> {
+    const user = await this.getUser(userId);
+    return user?.isAdmin === 1;
   }
 
   async getAITools(filters?: { category?: string; search?: string }): Promise<AITool[]> {
