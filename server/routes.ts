@@ -4,7 +4,7 @@ import session from "express-session";
 import createMemoryStore from "memorystore";
 import bcrypt from "bcrypt";
 import { storage } from "./storage";
-import { insertUserSchema, insertAIToolSchema, insertMediaProfileSchema } from "@shared/schema";
+import { insertUserSchema, insertAIToolSchema, insertMediaProfileSchema, insertWorkshopSchema, insertSessionSchema, insertPromptSchema } from "@shared/schema";
 import { z } from "zod";
 import { requireAdmin } from "./middleware/admin";
 
@@ -268,6 +268,197 @@ export async function registerRoutes(app: Express): Promise<Server> {
       res.json({ message: "Media profile deleted successfully" });
     } catch (error) {
       res.status(500).json({ message: "Failed to delete media profile" });
+    }
+  });
+
+  app.get("/api/workshops", async (req, res) => {
+    try {
+      const workshops = await storage.getWorkshops();
+      res.json(workshops);
+    } catch (error) {
+      res.status(500).json({ message: "Failed to fetch workshops" });
+    }
+  });
+
+  app.get("/api/workshops/:id", async (req, res) => {
+    try {
+      const { id } = req.params;
+      const workshop = await storage.getWorkshopById(id);
+      if (!workshop) {
+        return res.status(404).json({ message: "Workshop not found" });
+      }
+      res.json(workshop);
+    } catch (error) {
+      res.status(500).json({ message: "Failed to fetch workshop" });
+    }
+  });
+
+  app.get("/api/workshops/:id/sessions", async (req, res) => {
+    try {
+      const { id } = req.params;
+      const sessions = await storage.getSessionsByWorkshop(id);
+      res.json(sessions);
+    } catch (error) {
+      res.status(500).json({ message: "Failed to fetch sessions" });
+    }
+  });
+
+  app.get("/api/sessions/:id", async (req, res) => {
+    try {
+      const { id } = req.params;
+      const session = await storage.getSessionById(id);
+      if (!session) {
+        return res.status(404).json({ message: "Session not found" });
+      }
+      res.json(session);
+    } catch (error) {
+      res.status(500).json({ message: "Failed to fetch session" });
+    }
+  });
+
+  app.get("/api/prompts", async (req, res) => {
+    try {
+      const { category, featured } = req.query;
+      const prompts = await storage.getPrompts({
+        category: category as string | undefined,
+        featured: featured === "true",
+      });
+      res.json(prompts);
+    } catch (error) {
+      res.status(500).json({ message: "Failed to fetch prompts" });
+    }
+  });
+
+  app.get("/api/prompts/:id", async (req, res) => {
+    try {
+      const { id } = req.params;
+      const prompt = await storage.getPromptById(id);
+      if (!prompt) {
+        return res.status(404).json({ message: "Prompt not found" });
+      }
+      res.json(prompt);
+    } catch (error) {
+      res.status(500).json({ message: "Failed to fetch prompt" });
+    }
+  });
+
+  app.post("/api/admin/workshops", requireAdmin, async (req, res) => {
+    try {
+      const data = insertWorkshopSchema.parse(req.body);
+      const workshop = await storage.createWorkshop(data);
+      res.json(workshop);
+    } catch (error) {
+      if (error instanceof z.ZodError) {
+        return res.status(400).json({ message: error.errors[0].message });
+      }
+      res.status(500).json({ message: "Failed to create workshop" });
+    }
+  });
+
+  app.patch("/api/admin/workshops/:id", requireAdmin, async (req, res) => {
+    try {
+      const { id } = req.params;
+      const data = insertWorkshopSchema.partial().parse(req.body);
+      const workshop = await storage.updateWorkshop(id, data);
+      if (!workshop) {
+        return res.status(404).json({ message: "Workshop not found" });
+      }
+      res.json(workshop);
+    } catch (error) {
+      if (error instanceof z.ZodError) {
+        return res.status(400).json({ message: error.errors[0].message });
+      }
+      res.status(500).json({ message: "Failed to update workshop" });
+    }
+  });
+
+  app.delete("/api/admin/workshops/:id", requireAdmin, async (req, res) => {
+    try {
+      const { id } = req.params;
+      await storage.deleteWorkshop(id);
+      res.json({ message: "Workshop deleted successfully" });
+    } catch (error) {
+      res.status(500).json({ message: "Failed to delete workshop" });
+    }
+  });
+
+  app.post("/api/admin/sessions", requireAdmin, async (req, res) => {
+    try {
+      const data = insertSessionSchema.parse(req.body);
+      const session = await storage.createSession(data);
+      res.json(session);
+    } catch (error) {
+      if (error instanceof z.ZodError) {
+        return res.status(400).json({ message: error.errors[0].message });
+      }
+      res.status(500).json({ message: "Failed to create session" });
+    }
+  });
+
+  app.patch("/api/admin/sessions/:id", requireAdmin, async (req, res) => {
+    try {
+      const { id } = req.params;
+      const data = insertSessionSchema.partial().parse(req.body);
+      const session = await storage.updateSession(id, data);
+      if (!session) {
+        return res.status(404).json({ message: "Session not found" });
+      }
+      res.json(session);
+    } catch (error) {
+      if (error instanceof z.ZodError) {
+        return res.status(400).json({ message: error.errors[0].message });
+      }
+      res.status(500).json({ message: "Failed to update session" });
+    }
+  });
+
+  app.delete("/api/admin/sessions/:id", requireAdmin, async (req, res) => {
+    try {
+      const { id } = req.params;
+      await storage.deleteSession(id);
+      res.json({ message: "Session deleted successfully" });
+    } catch (error) {
+      res.status(500).json({ message: "Failed to delete session" });
+    }
+  });
+
+  app.post("/api/admin/prompts", requireAdmin, async (req, res) => {
+    try {
+      const data = insertPromptSchema.parse(req.body);
+      const prompt = await storage.createPrompt(data);
+      res.json(prompt);
+    } catch (error) {
+      if (error instanceof z.ZodError) {
+        return res.status(400).json({ message: error.errors[0].message });
+      }
+      res.status(500).json({ message: "Failed to create prompt" });
+    }
+  });
+
+  app.patch("/api/admin/prompts/:id", requireAdmin, async (req, res) => {
+    try {
+      const { id } = req.params;
+      const data = insertPromptSchema.partial().parse(req.body);
+      const prompt = await storage.updatePrompt(id, data);
+      if (!prompt) {
+        return res.status(404).json({ message: "Prompt not found" });
+      }
+      res.json(prompt);
+    } catch (error) {
+      if (error instanceof z.ZodError) {
+        return res.status(400).json({ message: error.errors[0].message });
+      }
+      res.status(500).json({ message: "Failed to update prompt" });
+    }
+  });
+
+  app.delete("/api/admin/prompts/:id", requireAdmin, async (req, res) => {
+    try {
+      const { id } = req.params;
+      await storage.deletePrompt(id);
+      res.json({ message: "Prompt deleted successfully" });
+    } catch (error) {
+      res.status(500).json({ message: "Failed to delete prompt" });
     }
   });
 
