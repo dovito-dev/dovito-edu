@@ -217,8 +217,13 @@ export async function registerRoutes(app: Express): Promise<Server> {
   app.get("/auth/google/callback", 
     passport.authenticate("google", { failureRedirect: "/login?auth=error" }),
     (req, res) => {
+      console.log("Google OAuth callback - User:", req.user);
       if (req.user) {
-        req.session.userId = (req.user as any).id;
+        const userId = (req.user as any).id;
+        req.session.userId = userId;
+        console.log("Setting session userId:", userId);
+      } else {
+        console.log("No user found in OAuth callback");
       }
       res.redirect("/dashboard?auth=success");
     }
