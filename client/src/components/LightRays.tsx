@@ -143,12 +143,23 @@ const LightRays: React.FC<LightRaysProps> = ({
 
       if (!containerRef.current) return;
 
-      const renderer = new Renderer({
-        dpr: Math.min(window.devicePixelRatio, 2),
-        alpha: true
-      });
+      let renderer: Renderer;
+      try {
+        renderer = new Renderer({
+          dpr: Math.min(window.devicePixelRatio, 2),
+          alpha: true
+        });
+        
+        if (!renderer || !renderer.gl) {
+          console.warn('WebGL not available, LightRays disabled');
+          return;
+        }
+      } catch (error) {
+        console.warn('Failed to initialize WebGL:', error);
+        return;
+      }
+      
       rendererRef.current = renderer;
-
       const gl = renderer.gl;
       gl.canvas.style.width = '100%';
       gl.canvas.style.height = '100%';

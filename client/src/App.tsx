@@ -21,7 +21,6 @@ import Media from "@/pages/Media";
 import Profile from "@/pages/Profile";
 import Privacy from "@/pages/Privacy";
 import Terms from "@/pages/Terms";
-import Contact from "@/pages/Contact";
 import AdminDashboard from "@/pages/admin/AdminDashboard";
 import AdminAITools from "@/pages/admin/AdminAITools";
 import AdminMediaProfiles from "@/pages/admin/AdminMediaProfiles";
@@ -61,7 +60,6 @@ function Router() {
       <Route path="/register" component={Register} />
       <Route path="/privacy" component={Privacy} />
       <Route path="/terms" component={Terms} />
-      <Route path="/contact" component={Contact} />
       
       <Route path="/dashboard">
         <AuthenticatedLayout>

@@ -150,9 +150,6 @@ export default function Landing() {
               <Link href="/terms" className="text-sm text-muted-foreground hover:text-foreground" data-testid="link-terms">
                 Terms of Service
               </Link>
-              <Link href="/contact" className="text-sm text-muted-foreground hover:text-foreground" data-testid="link-contact">
-                Contact
-              </Link>
             </div>
           </div>
         </div>

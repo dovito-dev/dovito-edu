@@ -2,6 +2,7 @@ import express, { type Express } from "express";
 import { createServer, type Server } from "http";
 import session from "express-session";
 import createMemoryStore from "memorystore";
+import connectPg from "connect-pg-simple";
 import passport from "passport";
 import { Strategy as GoogleStrategy } from "passport-google-oauth20";
 import bcrypt from "bcrypt";
@@ -14,6 +15,7 @@ import { z } from "zod";
 import { requireAdmin } from "./middleware/admin";
 
 const MemoryStore = createMemoryStore(session);
+const PostgresStore = connectPg(session);
 
 declare module "express-session" {
   interface SessionData {
@@ -55,6 +57,15 @@ const upload = multer({
 export async function registerRoutes(app: Express): Promise<Server> {
   app.use("/uploads", express.static(path.join(process.cwd(), "server", "uploads")));
 
+  const sessionStore = process.env.NODE_ENV === "production" && process.env.DATABASE_URL
+    ? new PostgresStore({
+        conString: process.env.DATABASE_URL,
+        createTableIfMissing: true,
+      })
+    : new MemoryStore({
+        checkPeriod: 86400000,
+      });
+
   app.use(
     session({
       secret: process.env.SESSION_SECRET || "dovito-edu-secret-key",
@@ -64,9 +75,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
         secure: process.env.NODE_ENV === "production",
         maxAge: 1000 * 60 * 60 * 24 * 7,
       },
-      store: new MemoryStore({
-        checkPeriod: 86400000,
-      }),
+      store: sessionStore,
     })
   );
 

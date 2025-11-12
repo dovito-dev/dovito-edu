@@ -123,7 +123,7 @@ Preferred communication style: Simple, everyday language.
 **Authentication & Security:**
 - bcrypt for password hashing
 - express-session for session management
-- connect-pg-simple for PostgreSQL session store (installed but using MemoryStore)
+- connect-pg-simple for PostgreSQL session store (production) / MemoryStore (development)
 - passport and passport-google-oauth20 for Google OAuth integration
 
 **Form Management:**
@@ -145,7 +145,12 @@ Preferred communication style: Simple, everyday language.
 - Updated database schema to support OAuth users (googleId field, nullable password)
 - Configured callback URL for production domain: `https://edu.dovito.com/auth/google/callback`
 - Added toast notifications for auth success/error feedback
-- Fixed session management to ensure OAuth users are properly authenticated
+- **CRITICAL FIX**: Switched session storage from MemoryStore to PostgreSQL (connect-pg-simple) for production
+  * Sessions now persist across requests and deployments
+  * Automatically creates `session` table in database
+  * Development still uses MemoryStore for convenience
+- Fixed Profile page to display real user data instead of hardcoded values
+- Removed Contact page and footer link
 
 **Future Integrations:**
 - Google Analytics GA4 (mentioned in requirements)
