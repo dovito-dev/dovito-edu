@@ -1,4 +1,4 @@
-import { Home, Presentation, Wrench, FileText, Share2, User, LogOut, Shield } from "lucide-react";
+import { Home, Presentation, Wrench, FileText, Share2, User, LogOut, Shield, BookOpen, Lightbulb } from "lucide-react";
 import { Link, useLocation } from "wouter";
 import { useMutation } from "@tanstack/react-query";
 import {
@@ -30,6 +30,8 @@ const adminItems = [
   { title: "Admin Dashboard", url: "/admin", icon: Shield },
   { title: "Manage AI Tools", url: "/admin/ai-tools", icon: Wrench },
   { title: "Manage Media", url: "/admin/media-profiles", icon: Share2 },
+  { title: "Manage Workshops", url: "/admin/workshops", icon: BookOpen },
+  { title: "Manage Prompts", url: "/admin/prompts", icon: Lightbulb },
 ];
 
 export function AppSidebar() {
