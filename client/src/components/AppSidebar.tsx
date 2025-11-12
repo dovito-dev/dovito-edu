@@ -1,5 +1,6 @@
 import { Home, Presentation, Wrench, FileText, Share2, User, LogOut } from "lucide-react";
 import { Link, useLocation } from "wouter";
+import { useQuery, useMutation } from "@tanstack/react-query";
 import {
   Sidebar,
   SidebarContent,
@@ -13,7 +14,8 @@ import {
   SidebarMenuItem,
 } from "@/components/ui/sidebar";
 import { UserAvatar } from "./UserAvatar";
-import logoImage from "@assets/generated_images/Dovito_EDU_square_logo_1e2e311b.png";
+import { apiRequest, queryClient } from "@/lib/queryClient";
+import type { User as UserType } from "@shared/schema";
 
 const menuItems = [
   { title: "Dashboard", url: "/dashboard", icon: Home },
@@ -25,19 +27,40 @@ const menuItems = [
 ];
 
 export function AppSidebar() {
-  const [location] = useLocation();
+  const [location, setLocation] = useLocation();
+
+  const { data: user } = useQuery<Omit<UserType, "password">>({
+    queryKey: ["/api/me"],
+  });
+
+  const logoutMutation = useMutation({
+    mutationFn: async () => {
+      const res = await apiRequest("POST", "/api/logout", {});
+      return await res.json();
+    },
+    onSuccess: () => {
+      queryClient.clear();
+      setLocation("/login");
+    },
+  });
+
+  const handleLogout = () => {
+    logoutMutation.mutate();
+  };
 
   return (
     <Sidebar>
       <SidebarHeader className="p-4">
         <Link href="/dashboard">
-          <a className="flex items-center gap-3 hover-elevate rounded-lg p-2" data-testid="link-logo">
-            <img src={logoImage} alt="Dovito EDU" className="h-10 w-10 rounded-md" />
+          <div className="flex items-center gap-3 hover-elevate rounded-lg p-2">
+            <div className="h-10 w-10 rounded-md bg-primary/10 flex items-center justify-center">
+              <span className="font-heading font-bold text-lg text-primary">D</span>
+            </div>
             <div>
               <h1 className="font-heading font-bold text-lg">Dovito EDU</h1>
               <p className="text-xs text-muted-foreground">Learn & Grow</p>
             </div>
-          </a>
+          </div>
         </Link>
       </SidebarHeader>
       <SidebarContent>
@@ -63,14 +86,15 @@ export function AppSidebar() {
       </SidebarContent>
       <SidebarFooter className="p-4">
         <div className="flex items-center gap-3 p-2 rounded-lg bg-sidebar-accent">
-          <UserAvatar name="John Doe" size="sm" />
+          <UserAvatar name={user?.name || user?.email || "User"} size="sm" />
           <div className="flex-1 min-w-0">
-            <p className="text-sm font-medium truncate">John Doe</p>
-            <p className="text-xs text-muted-foreground truncate">john@example.com</p>
+            <p className="text-sm font-medium truncate">{user?.name || "User"}</p>
+            <p className="text-xs text-muted-foreground truncate">{user?.email || ""}</p>
           </div>
           <button 
-            onClick={() => console.log("Logout clicked")}
+            onClick={handleLogout}
             data-testid="button-logout"
+            disabled={logoutMutation.isPending}
             className="hover-elevate active-elevate-2 rounded-md p-1.5"
             aria-label="Logout"
           >

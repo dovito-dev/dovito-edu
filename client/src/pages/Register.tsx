@@ -10,10 +10,11 @@ import { SiGoogle } from "react-icons/si";
 import { apiRequest } from "@/lib/queryClient";
 import { useToast } from "@/hooks/use-toast";
 
-export default function Login() {
+export default function Register() {
   const [, setLocation] = useLocation();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [name, setName] = useState("");
   const { toast } = useToast();
 
   const { data: user } = useQuery({
@@ -27,33 +28,33 @@ export default function Login() {
     }
   }, [user, setLocation]);
 
-  const loginMutation = useMutation({
-    mutationFn: async (credentials: { email: string; password: string }) => {
-      const res = await apiRequest("POST", "/api/login", credentials);
+  const registerMutation = useMutation({
+    mutationFn: async (data: { email: string; password: string; name: string }) => {
+      const res = await apiRequest("POST", "/api/register", data);
       return await res.json();
     },
     onSuccess: () => {
       toast({
-        title: "Welcome back!",
-        description: "You've successfully logged in.",
+        title: "Account created!",
+        description: "Welcome to Dovito EDU.",
       });
       setLocation("/dashboard");
     },
     onError: (error: any) => {
       toast({
-        title: "Login failed",
-        description: error.message || "Invalid credentials",
+        title: "Registration failed",
+        description: error.message || "Failed to create account",
         variant: "destructive",
       });
     },
   });
 
-  const handleLogin = (e: React.FormEvent) => {
+  const handleRegister = (e: React.FormEvent) => {
     e.preventDefault();
-    loginMutation.mutate({ email, password });
+    registerMutation.mutate({ email, password, name });
   };
 
-  const handleGoogleLogin = () => {
+  const handleGoogleRegister = () => {
     toast({
       title: "Coming Soon",
       description: "Google OAuth integration is coming soon!",
@@ -64,13 +65,24 @@ export default function Login() {
     <div className="min-h-screen flex items-center justify-center bg-background p-4">
       <Card className="w-full max-w-md">
         <CardHeader className="text-center space-y-4">
-          <CardTitle className="font-heading text-2xl">Welcome Back</CardTitle>
+          <CardTitle className="font-heading text-2xl">Create Account</CardTitle>
           <CardDescription>
-            Sign in to access your educational resources
+            Join Dovito EDU to access premium educational content
           </CardDescription>
         </CardHeader>
         <CardContent>
-          <form onSubmit={handleLogin} className="space-y-4">
+          <form onSubmit={handleRegister} className="space-y-4">
+            <div className="space-y-2">
+              <Label htmlFor="name">Name</Label>
+              <Input
+                id="name"
+                type="text"
+                placeholder="John Doe"
+                value={name}
+                onChange={(e) => setName(e.target.value)}
+                data-testid="input-name"
+              />
+            </div>
             <div className="space-y-2">
               <Label htmlFor="email">Email</Label>
               <Input
@@ -84,17 +96,7 @@ export default function Login() {
               />
             </div>
             <div className="space-y-2">
-              <div className="flex items-center justify-between">
-                <Label htmlFor="password">Password</Label>
-                <button
-                  type="button"
-                  className="text-sm text-primary hover:underline"
-                  onClick={() => console.log("Forgot password clicked")}
-                  data-testid="button-forgot-password"
-                >
-                  Forgot?
-                </button>
-              </div>
+              <Label htmlFor="password">Password</Label>
               <Input
                 id="password"
                 type="password"
@@ -102,11 +104,15 @@ export default function Login() {
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 required
+                minLength={6}
                 data-testid="input-password"
               />
+              <p className="text-xs text-muted-foreground">
+                Must be at least 6 characters
+              </p>
             </div>
-            <Button type="submit" className="w-full" disabled={loginMutation.isPending} data-testid="button-login-submit">
-              {loginMutation.isPending ? "Signing in..." : "Sign In"}
+            <Button type="submit" className="w-full" disabled={registerMutation.isPending} data-testid="button-register-submit">
+              {registerMutation.isPending ? "Creating account..." : "Create Account"}
             </Button>
           </form>
 
@@ -120,8 +126,8 @@ export default function Login() {
           <Button
             variant="outline"
             className="w-full gap-2"
-            onClick={handleGoogleLogin}
-            data-testid="button-google-login"
+            onClick={handleGoogleRegister}
+            data-testid="button-google-register"
           >
             <SiGoogle className="h-4 w-4" />
             Continue with Google
@@ -129,17 +135,13 @@ export default function Login() {
         </CardContent>
         <CardFooter className="flex flex-col gap-4">
           <p className="text-sm text-muted-foreground text-center">
-            Don't have an account?{" "}
-            <Link href="/register">
-              <a className="text-primary hover:underline" data-testid="link-register">
-                Sign up
-              </a>
+            Already have an account?{" "}
+            <Link href="/login" className="text-primary hover:underline" data-testid="link-login">
+              Sign in
             </Link>
           </p>
-          <Link href="/">
-            <a className="text-sm text-muted-foreground hover:text-foreground" data-testid="link-back-home">
-              ← Back to home
-            </a>
+          <Link href="/" className="text-sm text-muted-foreground hover:text-foreground" data-testid="link-back-home">
+            ← Back to home
           </Link>
         </CardFooter>
       </Card>

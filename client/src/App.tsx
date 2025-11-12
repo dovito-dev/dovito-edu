@@ -11,6 +11,7 @@ import { MobileNav } from "@/components/MobileNav";
 import NotFound from "@/pages/not-found";
 import Landing from "@/pages/Landing";
 import Login from "@/pages/Login";
+import Register from "@/pages/Register";
 import Dashboard from "@/pages/Dashboard";
 import Workshop from "@/pages/Workshop";
 import AITools from "@/pages/AITools";
@@ -51,7 +52,7 @@ function Router() {
     <Switch>
       <Route path="/" component={Landing} />
       <Route path="/login" component={Login} />
-      <Route path="/register" component={Login} />
+      <Route path="/register" component={Register} />
       <Route path="/privacy" component={Privacy} />
       <Route path="/terms" component={Terms} />
       <Route path="/contact" component={Contact} />
