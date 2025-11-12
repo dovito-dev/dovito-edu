@@ -4,8 +4,9 @@ import session from "express-session";
 import createMemoryStore from "memorystore";
 import bcrypt from "bcrypt";
 import { storage } from "./storage";
-import { insertUserSchema } from "@shared/schema";
+import { insertUserSchema, insertAIToolSchema, insertMediaProfileSchema } from "@shared/schema";
 import { z } from "zod";
+import { requireAdmin } from "./middleware/admin";
 
 const MemoryStore = createMemoryStore(session);
 
@@ -111,10 +112,13 @@ export async function registerRoutes(app: Express): Promise<Server> {
       return res.status(401).json({ message: "User not found" });
     }
 
+    const isAdmin = await storage.isUserAdmin(req.session.userId);
+
     res.json({
       id: user.id,
       email: user.email,
       name: user.name,
+      isAdmin,
     });
   });
 
@@ -145,6 +149,125 @@ export async function registerRoutes(app: Express): Promise<Server> {
       res.json(tool);
     } catch (error) {
       res.status(500).json({ message: "Failed to fetch AI tool" });
+    }
+  });
+
+  app.get("/api/media-profiles", async (req, res) => {
+    try {
+      const { category, featured } = req.query;
+      
+      const profiles = await storage.getMediaProfiles({
+        category: category as string | undefined,
+        featured: featured === "true",
+      });
+
+      res.json(profiles);
+    } catch (error) {
+      res.status(500).json({ message: "Failed to fetch media profiles" });
+    }
+  });
+
+  app.get("/api/media-profiles/:id", async (req, res) => {
+    try {
+      const { id } = req.params;
+      
+      const profile = await storage.getMediaProfileById(id);
+      if (!profile) {
+        return res.status(404).json({ message: "Media profile not found" });
+      }
+
+      res.json(profile);
+    } catch (error) {
+      res.status(500).json({ message: "Failed to fetch media profile" });
+    }
+  });
+
+  app.get("/api/admin/check", async (req, res) => {
+    if (!req.session.userId) {
+      return res.json({ isAdmin: false });
+    }
+
+    const isAdmin = await storage.isUserAdmin(req.session.userId);
+    res.json({ isAdmin });
+  });
+
+  app.post("/api/admin/ai-tools", requireAdmin, async (req, res) => {
+    try {
+      const data = insertAIToolSchema.parse(req.body);
+      const tool = await storage.createAITool(data);
+      res.json(tool);
+    } catch (error) {
+      if (error instanceof z.ZodError) {
+        return res.status(400).json({ message: error.errors[0].message });
+      }
+      res.status(500).json({ message: "Failed to create AI tool" });
+    }
+  });
+
+  app.patch("/api/admin/ai-tools/:id", requireAdmin, async (req, res) => {
+    try {
+      const { id } = req.params;
+      const data = insertAIToolSchema.partial().parse(req.body);
+      const tool = await storage.updateAITool(id, data);
+      if (!tool) {
+        return res.status(404).json({ message: "AI tool not found" });
+      }
+      res.json(tool);
+    } catch (error) {
+      if (error instanceof z.ZodError) {
+        return res.status(400).json({ message: error.errors[0].message });
+      }
+      res.status(500).json({ message: "Failed to update AI tool" });
+    }
+  });
+
+  app.delete("/api/admin/ai-tools/:id", requireAdmin, async (req, res) => {
+    try {
+      const { id } = req.params;
+      await storage.deleteAITool(id);
+      res.json({ message: "AI tool deleted successfully" });
+    } catch (error) {
+      res.status(500).json({ message: "Failed to delete AI tool" });
+    }
+  });
+
+  app.post("/api/admin/media-profiles", requireAdmin, async (req, res) => {
+    try {
+      const data = insertMediaProfileSchema.parse(req.body);
+      const profile = await storage.createMediaProfile(data);
+      res.json(profile);
+    } catch (error) {
+      if (error instanceof z.ZodError) {
+        return res.status(400).json({ message: error.errors[0].message });
+      }
+      res.status(500).json({ message: "Failed to create media profile" });
+    }
+  });
+
+  app.patch("/api/admin/media-profiles/:id", requireAdmin, async (req, res) => {
+    try {
+      const { id } = req.params;
+      const data = insertMediaProfileSchema.partial().parse(req.body);
+      const profile = await storage.updateMediaProfile(id, data);
+      if (!profile) {
+        return res.status(404).json({ message: "Media profile not found" });
+      }
+      res.json(profile);
+    } catch (error) {
+      if (error instanceof z.ZodError) {
+        return res.status(400).json({ message: error.errors[0].message });
+      }
+      res.status(500).json({ message: "Failed to update media profile" });
+    }
+  });
+
+  app.delete("/api/admin/media-profiles/:id", requireAdmin, async (req, res) => {
+    try {
+      const { id } = req.params;
+      await storage.deleteMediaProfile(id);
+      res.json({ message: "Media profile deleted successfully" });
+    } catch (error) {
+      res.status(500).json({ message: "Failed to delete media profile" });
     }
   });
 

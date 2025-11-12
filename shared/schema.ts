@@ -52,13 +52,10 @@ export const insertUserSchema = createInsertSchema(users).omit({
 
 export const insertAIToolSchema = createInsertSchema(aiTools).omit({
   id: true,
-  sortOrder: true,
 });
 
 export const insertMediaProfileSchema = createInsertSchema(mediaProfiles).omit({
   id: true,
-  sortOrder: true,
-  featured: true,
 });
 
 export type InsertUser = z.infer<typeof insertUserSchema>;

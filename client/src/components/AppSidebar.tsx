@@ -1,6 +1,6 @@
-import { Home, Presentation, Wrench, FileText, Share2, User, LogOut } from "lucide-react";
+import { Home, Presentation, Wrench, FileText, Share2, User, LogOut, Shield } from "lucide-react";
 import { Link, useLocation } from "wouter";
-import { useQuery, useMutation } from "@tanstack/react-query";
+import { useMutation } from "@tanstack/react-query";
 import {
   Sidebar,
   SidebarContent,
@@ -15,7 +15,7 @@ import {
 } from "@/components/ui/sidebar";
 import { UserAvatar } from "./UserAvatar";
 import { apiRequest, queryClient } from "@/lib/queryClient";
-import type { User as UserType } from "@shared/schema";
+import { useSession } from "@/hooks/useSession";
 
 const menuItems = [
   { title: "Dashboard", url: "/dashboard", icon: Home },
@@ -26,12 +26,15 @@ const menuItems = [
   { title: "Profile", url: "/profile", icon: User },
 ];
 
+const adminItems = [
+  { title: "Admin Dashboard", url: "/admin", icon: Shield },
+  { title: "Manage AI Tools", url: "/admin/ai-tools", icon: Wrench },
+  { title: "Manage Media", url: "/admin/media-profiles", icon: Share2 },
+];
+
 export function AppSidebar() {
   const [location, setLocation] = useLocation();
-
-  const { data: user } = useQuery<Omit<UserType, "password">>({
-    queryKey: ["/api/me"],
-  });
+  const { user, isAdmin } = useSession();
 
   const logoutMutation = useMutation({
     mutationFn: async () => {
@@ -81,6 +84,26 @@ export function AppSidebar() {
             </SidebarMenu>
           </SidebarGroupContent>
         </SidebarGroup>
+
+        {isAdmin && (
+          <SidebarGroup>
+            <SidebarGroupLabel>Administration</SidebarGroupLabel>
+            <SidebarGroupContent>
+              <SidebarMenu>
+                {adminItems.map((item) => (
+                  <SidebarMenuItem key={item.title}>
+                    <Link href={item.url}>
+                      <SidebarMenuButton isActive={location === item.url} data-testid={`link-admin-${item.title.toLowerCase().replace(/\s+/g, "-")}`}>
+                        <item.icon className="h-4 w-4" />
+                        <span>{item.title}</span>
+                      </SidebarMenuButton>
+                    </Link>
+                  </SidebarMenuItem>
+                ))}
+              </SidebarMenu>
+            </SidebarGroupContent>
+          </SidebarGroup>
+        )}
       </SidebarContent>
       <SidebarFooter className="p-4">
         <div className="flex items-center gap-3 p-2 rounded-lg bg-sidebar-accent">

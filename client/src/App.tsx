@@ -22,6 +22,9 @@ import Profile from "@/pages/Profile";
 import Privacy from "@/pages/Privacy";
 import Terms from "@/pages/Terms";
 import Contact from "@/pages/Contact";
+import AdminDashboard from "@/pages/admin/AdminDashboard";
+import AdminAITools from "@/pages/admin/AdminAITools";
+import AdminMediaProfiles from "@/pages/admin/AdminMediaProfiles";
 
 function AuthenticatedLayout({ children }: { children: React.ReactNode }) {
   const style = {
@@ -91,6 +94,22 @@ function Router() {
       <Route path="/profile">
         <AuthenticatedLayout>
           <Profile />
+        </AuthenticatedLayout>
+      </Route>
+      
+      <Route path="/admin">
+        <AuthenticatedLayout>
+          <AdminDashboard />
+        </AuthenticatedLayout>
+      </Route>
+      <Route path="/admin/ai-tools">
+        <AuthenticatedLayout>
+          <AdminAITools />
+        </AuthenticatedLayout>
+      </Route>
+      <Route path="/admin/media-profiles">
+        <AuthenticatedLayout>
+          <AdminMediaProfiles />
         </AuthenticatedLayout>
       </Route>
       
