@@ -2,9 +2,9 @@ import { ArrowRight, Presentation, Wrench, FileText, Share2 } from "lucide-react
 import { Link } from "wouter";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-import heroImage from "@assets/generated_images/Hero_image_collaborative_learning_2791f5a0.png";
 import logoImage from "@assets/generated_images/Dovito_EDU_square_logo_1e2e311b.png";
 import { ThemeToggle } from "@/components/ThemeToggle";
+import LightRays from "@/components/LightRays";
 
 const features = [
   {
@@ -32,43 +32,56 @@ const features = [
 export default function Landing() {
   return (
     <div className="min-h-screen bg-background">
-      <header className="border-b border-border bg-card/50 backdrop-blur-sm sticky top-0 z-40">
-        <div className="container mx-auto px-4 py-4 flex items-center justify-between">
-          <div className="flex items-center gap-3">
-            <img src={logoImage} alt="Dovito EDU" className="h-10 w-10 rounded-md" />
-            <h1 className="font-heading font-bold text-xl">Dovito EDU</h1>
-          </div>
-          <div className="flex items-center gap-2">
-            <ThemeToggle />
-            <Link href="/login">
-              <Button variant="ghost" data-testid="button-login">
-                Login
-              </Button>
-            </Link>
+      <header className="fixed top-0 left-0 right-0 z-50 px-4 pt-4">
+        <div className="container mx-auto">
+          <div className="bg-card/70 backdrop-blur-xl border border-border rounded-2xl px-6 py-4 shadow-lg">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-3">
+                <img src={logoImage} alt="Dovito EDU" className="h-10 w-10 rounded-md" />
+                <h1 className="font-heading font-bold text-xl">Dovito EDU</h1>
+              </div>
+              <div className="flex items-center gap-2">
+                <ThemeToggle />
+                <Link href="/login">
+                  <Button variant="ghost" data-testid="button-login">
+                    Login
+                  </Button>
+                </Link>
+              </div>
+            </div>
           </div>
         </div>
       </header>
 
-      <section className="relative h-[80vh] flex items-center justify-center overflow-hidden">
+      <section className="relative h-screen flex items-center justify-center overflow-hidden">
         <div className="absolute inset-0">
-          <img src={heroImage} alt="Learning workspace" className="w-full h-full object-cover" />
-          <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/50 to-black/30" />
+          <LightRays
+            raysOrigin="top-center"
+            raysColor="#3b82f6"
+            raysSpeed={1}
+            lightSpread={1}
+            rayLength={1.5}
+            followMouse={true}
+            mouseInfluence={0.1}
+            noiseAmount={0}
+            distortion={0}
+          />
         </div>
-        <div className="relative z-10 container mx-auto px-4 text-center text-white">
+        <div className="relative z-10 container mx-auto px-4 text-center">
           <h2 className="font-heading font-bold text-5xl md:text-6xl mb-6">
             Elevate Your AI Journey
           </h2>
-          <p className="text-xl md:text-2xl mb-8 max-w-2xl mx-auto text-white/90">
+          <p className="text-xl md:text-2xl mb-8 max-w-2xl mx-auto text-muted-foreground">
             Access premium workshops, comprehensive AI tools, and curated prompts—all in one modern platform
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Link href="/login">
-              <Button size="lg" className="text-lg backdrop-blur-md bg-primary border border-primary-border" data-testid="button-get-access">
+              <Button size="lg" className="text-lg" data-testid="button-get-access">
                 Get Instant Access
                 <ArrowRight className="ml-2 h-5 w-5" />
               </Button>
             </Link>
-            <Button size="lg" variant="outline" className="text-lg backdrop-blur-md bg-background/20 text-white border-white/30 hover:bg-white/10" data-testid="button-learn-more">
+            <Button size="lg" variant="outline" className="text-lg" data-testid="button-learn-more">
               Learn More
             </Button>
           </div>
