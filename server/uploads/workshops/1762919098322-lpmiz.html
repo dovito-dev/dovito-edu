@@ -1,0 +1,1629 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Session 1: Talking to AI - Immersive Experience</title>
+    <style>
+        :root {
+            --color-white: rgba(255, 255, 255, 1);
+            --color-black: rgba(0, 0, 0, 1);
+            --color-cream-50: rgba(252, 252, 249, 1);
+            --color-cream-100: rgba(255, 255, 253, 1);
+            --color-gray-200: rgba(245, 245, 245, 1);
+            --color-gray-300: rgba(167, 169, 169, 1);
+            --color-gray-400: rgba(119, 124, 124, 1);
+            --color-slate-500: rgba(98, 108, 113, 1);
+            --color-brown-600: rgba(94, 82, 64, 1);
+            --color-charcoal-700: rgba(31, 33, 33, 1);
+            --color-charcoal-800: rgba(38, 40, 40, 1);
+            --color-slate-900: rgba(19, 52, 59, 1);
+            --color-teal-300: rgba(50, 184, 198, 1);
+            --color-teal-400: rgba(45, 166, 178, 1);
+            --color-teal-500: rgba(33, 128, 141, 1);
+            --color-teal-600: rgba(29, 116, 128, 1);
+            --color-teal-700: rgba(26, 104, 115, 1);
+            --color-teal-800: rgba(41, 150, 161, 1);
+            --color-red-400: rgba(255, 84, 89, 1);
+            --color-red-500: rgba(192, 21, 47, 1);
+            --color-orange-400: rgba(230, 129, 97, 1);
+            --color-orange-500: rgba(168, 75, 47, 1);
+            --color-brown-600-rgb: 94, 82, 64;
+            --color-teal-500-rgb: 33, 128, 141;
+            --color-slate-900-rgb: 19, 52, 59;
+            --color-slate-500-rgb: 98, 108, 113;
+            --color-background: var(--color-cream-50);
+            --color-surface: var(--color-cream-100);
+            --color-text: var(--color-slate-900);
+            --color-text-secondary: var(--color-slate-500);
+            --color-primary: var(--color-teal-500);
+            --color-primary-hover: var(--color-teal-600);
+            --color-primary-active: var(--color-teal-700);
+            --color-secondary: rgba(var(--color-brown-600-rgb), 0.12);
+            --color-secondary-hover: rgba(var(--color-brown-600-rgb), 0.2);
+            --color-border: rgba(var(--color-brown-600-rgb), 0.2);
+            --color-card-border: rgba(var(--color-brown-600-rgb), 0.12);
+            --font-family-base: 'FKGroteskNeue', 'Segoe UI', -apple-system, BlinkMacSystemFont, Roboto, sans-serif;
+            --font-size-xs: 11px;
+            --font-size-sm: 12px;
+            --font-size-base: 14px;
+            --font-size-md: 14px;
+            --font-size-lg: 16px;
+            --font-size-xl: 18px;
+            --font-size-2xl: 20px;
+            --font-size-3xl: 24px;
+            --font-size-4xl: 30px;
+            --font-weight-normal: 400;
+            --font-weight-medium: 500;
+            --font-weight-semibold: 550;
+            --font-weight-bold: 600;
+            --line-height-tight: 1.2;
+            --line-height-normal: 1.5;
+            --space-8: 8px;
+            --space-12: 12px;
+            --space-16: 16px;
+            --space-20: 20px;
+            --space-24: 24px;
+            --space-32: 32px;
+            --radius-base: 8px;
+            --radius-md: 10px;
+            --radius-lg: 12px;
+            --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.04), 0 1px 2px rgba(0, 0, 0, 0.02);
+            --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.04), 0 2px 4px -1px rgba(0, 0, 0, 0.02);
+        }
+
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --color-gray-400-rgb: 119, 124, 124;
+                --color-teal-300-rgb: 50, 184, 198;
+                --color-gray-300-rgb: 167, 169, 169;
+                --color-gray-200-rgb: 245, 245, 245;
+                --color-background: var(--color-charcoal-700);
+                --color-surface: var(--color-charcoal-800);
+                --color-text: var(--color-gray-200);
+                --color-text-secondary: rgba(var(--color-gray-300-rgb), 0.7);
+                --color-primary: var(--color-teal-300);
+                --color-primary-hover: var(--color-teal-400);
+                --color-secondary: rgba(var(--color-gray-400-rgb), 0.15);
+                --color-border: rgba(var(--color-gray-400-rgb), 0.3);
+                --color-card-border: rgba(var(--color-gray-400-rgb), 0.2);
+            }
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body, html {
+            width: 100%;
+            height: 100%;
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+            font-family: var(--font-family-base);
+            background: #0a0e1a;
+            color: var(--color-text);
+            line-height: var(--line-height-normal);
+            perspective: 1000px;
+            box-sizing: border-box;
+        }
+        @media (max-width: 768px) {
+            body, html {
+                min-width: 100vw;
+                min-height: 100vh;
+            }
+        }
+        @supports (padding: max(0px)) {
+            body, html, #presentation {
+                padding: env(safe-area-inset-top, 0px) env(safe-area-inset-right, 0px) env(safe-area-inset-bottom, 0px) env(safe-area-inset-left, 0px);
+                background-clip: padding-box;
+            }
+        }
+
+        @media (prefers-color-scheme: dark) {
+            body {
+                background: #0a0e1a;
+            }
+        }
+
+        #presentation {
+            width: 100%;
+            height: 100%;
+            position: relative;
+            background: linear-gradient(135deg, #0a0e1a 0%, #1a1f35 50%, #0f1420 100%);
+        }
+
+        .space-container {
+            width: 100%;
+            height: 100%;
+            position: relative;
+            transform-style: preserve-3d;
+            transition: transform 1s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .zone {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
+            align-items: center;
+            padding: 3vh 5vw 5vh 5vw;
+            max-width: 100vw;
+            opacity: 0;
+            pointer-events: none;
+            transition: all 1s cubic-bezier(0.16, 1, 0.3, 1);
+            transform-style: preserve-3d;
+            overflow-y: hidden;
+            overflow-x: hidden;
+        }
+
+        .zone.active {
+            opacity: 1;
+            pointer-events: all;
+            z-index: 2;
+        }
+
+        /* Admin Button - Integrated Design (Not Overlay) */
+        .admin-btn-integrated {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 24px 48px;
+            background: linear-gradient(135deg, var(--color-teal-500) 0%, var(--color-teal-700) 100%);
+            border: 2px solid var(--color-teal-300);
+            border-radius: var(--radius-lg);
+            color: white;
+            font-size: 20px;
+            font-weight: var(--font-weight-semibold);
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+            box-shadow: 0 8px 24px rgba(50, 184, 198, 0.3);
+            text-transform: none;
+            letter-spacing: 0.5px;
+            min-width: 320px;
+        }
+
+        .admin-btn-integrated:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 12px 32px rgba(50, 184, 198, 0.5);
+            background: linear-gradient(135deg, var(--color-teal-400) 0%, var(--color-teal-600) 100%);
+        }
+
+        .admin-btn-integrated:active {
+            transform: translateY(-2px);
+        }
+
+        .admin-btn-integrated .icon {
+            margin-right: 12px;
+            font-size: 24px;
+        }
+
+        .admin-btn.hidden {
+            display: none;
+        }
+
+        /* Landing Page Styles */
+        .landing-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100%;
+            text-align: center;
+            padding: 60px 40px;
+        }
+
+        .landing-title {
+            font-size: clamp(40px, 6vw, 72px);
+            font-weight: var(--font-weight-bold);
+            color: white;
+            margin-bottom: 24px;
+            text-shadow: 0 4px 20px rgba(50, 184, 198, 0.4);
+            letter-spacing: -0.02em;
+        }
+
+        .landing-subtitle {
+            font-size: clamp(20px, 2.5vw, 28px);
+            color: var(--color-teal-300);
+            margin-bottom: 48px;
+            font-weight: var(--font-weight-normal);
+        }
+
+        .landing-cta {
+            background: rgba(50, 184, 198, 0.15);
+            border: 2px solid var(--color-teal-300);
+            border-radius: var(--radius-lg);
+            padding: 32px 48px;
+            margin-top: 40px;
+            backdrop-filter: blur(10px);
+            max-width: 600px;
+        }
+
+        .landing-cta p {
+            font-size: 20px;
+            color: rgba(255, 255, 255, 0.9);
+            margin-bottom: 0;
+        }
+
+        /* Admin Control Center Styles */
+        .admin-center-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100%;
+            padding: 60px 40px;
+        }
+
+        .admin-center-header {
+            text-align: center;
+            margin-bottom: 60px;
+        }
+
+        .admin-center-title {
+            font-size: clamp(36px, 5vw, 56px);
+            font-weight: var(--font-weight-bold);
+            color: white;
+            margin-bottom: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 16px;
+        }
+
+        .admin-center-description {
+            font-size: clamp(18px, 2vw, 22px);
+            color: rgba(255, 255, 255, 0.8);
+            max-width: 700px;
+            margin: 0 auto;
+            line-height: 1.6;
+        }
+
+        .admin-center-main {
+            background: rgba(50, 184, 198, 0.1);
+            border: 2px solid var(--color-teal-300);
+            border-radius: var(--radius-lg);
+            padding: 48px 60px;
+            text-align: center;
+            backdrop-filter: blur(10px);
+            max-width: 800px;
+            margin-bottom: 48px;
+            box-shadow: 0 8px 32px rgba(50, 184, 198, 0.2);
+        }
+
+        .admin-center-main h3 {
+            font-size: 24px;
+            color: var(--color-teal-300);
+            margin-bottom: 16px;
+            font-weight: var(--font-weight-semibold);
+        }
+
+        .admin-center-main p {
+            font-size: 18px;
+            color: rgba(255, 255, 255, 0.8);
+            margin-bottom: 32px;
+            line-height: 1.6;
+        }
+
+        .admin-center-footer {
+            text-align: center;
+        }
+
+        .admin-center-footer p {
+            font-size: 18px;
+            color: var(--color-teal-300);
+            margin-bottom: 12px;
+        }
+
+        .admin-center-footer .instruction {
+            font-size: 16px;
+            color: rgba(255, 255, 255, 0.6);
+            font-style: italic;
+        }
+
+        /* Fullscreen Button - Styled like V1 buttons */
+        .fullscreen-btn {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            z-index: 1000;
+            width: 50px;
+            height: 50px;
+            background: rgba(0, 0, 0, 0.6);
+            color: white;
+            border: 2px solid white;
+            cursor: pointer;
+            font-size: 24px;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(10px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .fullscreen-btn:hover {
+            background: rgba(0, 0, 0, 0.9);
+            transform: scale(1.05);
+        }
+
+        .fullscreen-btn svg {
+            width: 24px;
+            height: 24px;
+        }
+
+        .admin-panel {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.9);
+            backdrop-filter: blur(20px);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 2000;
+            padding: 40px;
+        }
+
+        .admin-panel.active {
+            display: flex;
+        }
+
+        .admin-content {
+            background: var(--color-charcoal-800);
+            border: 1px solid var(--color-teal-300);
+            border-radius: var(--radius-lg);
+            padding: 40px;
+            max-width: 800px;
+            width: 100%;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+
+        .admin-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+        }
+
+        .admin-close {
+            background: none;
+            border: none;
+            color: var(--color-text);
+            font-size: 28px;
+            cursor: pointer;
+            padding: 0;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            transition: background 0.3s ease;
+        }
+
+        .admin-close:hover {
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        .qr-upload-section {
+            margin-bottom: 30px;
+        }
+
+        .qr-upload-item {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: var(--radius-base);
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+
+        .qr-upload-item input[type="text"],
+        .qr-upload-item textarea {
+            width: 100%;
+            padding: 10px;
+            margin: 8px 0;
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: var(--radius-sm);
+            color: var(--color-text);
+            font-family: var(--font-family-base);
+            font-size: var(--font-size-base);
+        }
+
+        .qr-upload-item textarea {
+            min-height: 60px;
+            resize: vertical;
+        }
+
+        .qr-upload-item input[type="file"] {
+            margin: 10px 0;
+        }
+
+        .qr-preview {
+            max-width: 150px;
+            margin-top: 10px;
+            border-radius: var(--radius-sm);
+        }
+
+        .btn-save {
+            background: var(--color-primary);
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: var(--radius-base);
+            font-size: var(--font-size-base);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-right: 10px;
+        }
+
+        .btn-save:hover {
+            background: var(--color-primary-hover);
+        }
+
+        .btn-delete {
+            background: var(--color-red-500);
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: var(--radius-sm);
+            font-size: var(--font-size-sm);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: 10px;
+        }
+
+        .btn-delete:hover {
+            background: var(--color-red-400);
+        }
+
+        /* Chat Interface Styles */
+        .chat-container {
+            max-width: 1000px;
+            width: 90%;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 16px;
+            padding: clamp(16px, 2vw, 24px);
+            backdrop-filter: blur(10px);
+        }
+
+        .chat-message {
+            display: flex;
+            margin-bottom: 16px;
+            opacity: 0;
+            animation: slideInMessage 0.5s ease forwards;
+        }
+
+        .chat-message.user {
+            justify-content: flex-end;
+        }
+
+        .message-bubble {
+            max-width: 80%;
+            padding: 12px 18px;
+            border-radius: 18px;
+            font-size: 16px;
+            line-height: 1.5;
+        }
+
+        .message-bubble.user {
+            background: var(--color-primary);
+            color: white;
+        }
+
+        .message-bubble.ai {
+            background: rgba(255, 255, 255, 0.1);
+            color: var(--color-text);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .typing-indicator {
+            display: flex;
+            gap: 6px;
+            padding: 12px 18px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 18px;
+            width: fit-content;
+        }
+
+        .typing-dot {
+            width: 8px;
+            height: 8px;
+            background: var(--color-teal-300);
+            border-radius: 50%;
+            animation: typingBounce 1.4s infinite;
+        }
+
+        .typing-dot:nth-child(2) { animation-delay: 0.2s; }
+        .typing-dot:nth-child(3) { animation-delay: 0.4s; }
+
+        @keyframes typingBounce {
+            0%, 60%, 100% { transform: translateY(0); }
+            30% { transform: translateY(-10px); }
+        }
+
+        @keyframes slideInMessage {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .zone h1 {
+            font-size: clamp(32px, 5vw, 56px);
+            font-weight: var(--font-weight-bold);
+            color: var(--color-text);
+            margin-bottom: var(--space-24);
+            text-align: center;
+            line-height: var(--line-height-tight);
+            animation: fadeInUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+            max-width: 1400px;
+            padding: 0 5%;
+        }
+
+        .zone h2 {
+            font-size: clamp(28px, 4vw, 42px);
+            font-weight: var(--font-weight-bold);
+            color: white;
+            margin-bottom: clamp(16px, 2vh, 32px);
+            margin-top: clamp(8px, 1vh, 16px);
+            text-align: center;
+            line-height: var(--line-height-tight);
+            max-width: 1400px;
+            padding: 0 5%;
+        }
+
+        .zone h3 {
+            font-size: 28px;
+            font-weight: var(--font-weight-semibold);
+            color: var(--color-teal-300);
+            margin-bottom: var(--space-20);
+        }
+
+        .zone p, .zone li {
+            font-size: clamp(16px, 1.8vw, 20px);
+            line-height: 1.6;
+            color: rgba(255, 255, 255, 0.9);
+            max-width: 1200px;
+            margin-bottom: var(--space-16);
+            padding: 0 3%;
+        }
+
+        .zone ul {
+            list-style: none;
+            max-width: 1200px;
+            width: 90%;
+            text-align: left;
+        }
+
+        .zone li {
+            padding-left: 32px;
+            position: relative;
+            margin-bottom: var(--space-16);
+        }
+
+
+
+        .zone li::before {
+            content: '●';
+            position: absolute;
+            left: 0;
+            color: var(--color-teal-300);
+            font-size: 24px;
+        }
+
+        .subtitle {
+            font-size: 24px;
+            color: var(--color-teal-300);
+            font-weight: var(--font-weight-normal);
+            margin-top: var(--space-16);
+        }
+
+        .highlight {
+            background: rgba(50, 184, 198, 0.15);
+            padding: clamp(12px, 2vw, 24px);
+            border-radius: var(--radius-lg);
+            border: 1px solid var(--color-teal-300);
+            margin: clamp(12px, 2vh, 24px) auto;
+            backdrop-filter: blur(10px);
+            max-width: 1000px;
+            width: 90%;
+        }
+
+        .chart-container {
+            width: 90%;
+            max-width: 1000px;
+            margin: clamp(12px, 2vh, 24px) auto;
+            padding: 0 3%;
+        }
+
+        .chart-container img {
+            width: 100%;
+            height: auto;
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow-md);
+        }
+
+        .two-column {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 40px;
+            width: 90%;
+            max-width: 1300px;
+            margin: var(--space-32) auto;
+            padding: 0 3%;
+        }
+
+        .qr-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 24px;
+            width: 90%;
+            max-width: 1200px;
+            margin: var(--space-32) auto;
+            padding: 0 3%;
+        }
+
+        .qr-card {
+            background: rgba(50, 184, 198, 0.1);
+            border: 1px solid var(--color-teal-300);
+            border-radius: var(--radius-lg);
+            padding: 24px;
+            text-align: center;
+            backdrop-filter: blur(10px);
+        }
+
+        .qr-placeholder {
+            width: 150px;
+            height: 150px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 2px dashed var(--color-teal-300);
+            border-radius: var(--radius-base);
+            margin: 0 auto var(--space-16);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: var(--font-size-sm);
+            color: rgba(255, 255, 255, 0.5);
+        }
+
+        .qr-card h4 {
+            font-size: var(--font-size-lg);
+            font-weight: var(--font-weight-semibold);
+            color: var(--color-text);
+        }
+
+
+
+
+
+        .progress-bar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            height: 4px;
+            background: var(--color-primary);
+            transition: width 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+            z-index: 1000;
+        }
+
+        .slide-counter {
+            position: fixed;
+            bottom: 40px;
+            left: 40px;
+            font-size: var(--font-size-lg);
+            color: var(--color-text-secondary);
+            font-weight: var(--font-weight-medium);
+            z-index: 1000;
+        }
+
+
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Particle background effect */
+        .zone::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle at 30% 50%, rgba(50, 184, 198, 0.1) 0%, transparent 50%),
+                        radial-gradient(circle at 70% 80%, rgba(50, 184, 198, 0.05) 0%, transparent 50%);
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .zone > * {
+            position: relative;
+            z-index: 1;
+        }
+
+        /* Custom cursor effect */
+        .admin-btn {
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* Zone transition effects */
+        .zone {
+            transform: scale(0.95) translateZ(-100px);
+        }
+
+        .zone.active {
+            transform: scale(1) translateZ(0);
+        }
+
+        /* Progress animations */
+        .progress-bar {
+            box-shadow: 0 0 20px rgba(50, 184, 198, 0.5);
+        }
+
+        /* Hover effects for interactive elements */
+        .chat-container:hover {
+            transform: scale(1.02);
+            transition: transform 0.3s ease;
+        }
+
+        .stats-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(50, 184, 198, 0.3);
+            transition: all 0.3s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(50, 184, 198, 0.3);
+            transition: all 0.3s ease;
+        }
+
+        /* Welcome animation */
+        .zone[data-zone="1"].active h1 {
+            animation: titlePulse 2s ease-in-out infinite;
+        }
+
+        @keyframes titlePulse {
+            0%, 100% { text-shadow: 0 0 40px rgba(50, 184, 198, 0.5); }
+            50% { text-shadow: 0 0 60px rgba(50, 184, 198, 0.8), 0 0 80px rgba(50, 184, 198, 0.4); }
+        }
+
+        /* Smooth scroll indicator */
+        .scroll-hint {
+            position: absolute;
+            bottom: 60px;
+            left: 50%;
+            transform: translateX(-50%);
+            color: rgba(255, 255, 255, 0.5);
+            font-size: 14px;
+            animation: bounce 2s infinite;
+        }
+
+        @keyframes bounce {
+            0%, 100% { transform: translateX(-50%) translateY(0); }
+            50% { transform: translateX(-50%) translateY(10px); }
+        }
+
+        .stats-card {
+            background: rgba(50, 184, 198, 0.1);
+            border: 1px solid var(--color-teal-300);
+            border-radius: var(--radius-lg);
+            padding: 24px;
+            text-align: center;
+            backdrop-filter: blur(10px);
+        }
+
+        .stat-number {
+            font-size: 48px;
+            font-weight: var(--font-weight-bold);
+            color: var(--color-teal-300);
+            margin-bottom: 8px;
+        }
+
+        .stat-label {
+            font-size: 16px;
+            color: rgba(255, 255, 255, 0.7);
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 60px;
+            color: rgba(255, 255, 255, 0.5);
+        }
+
+        .empty-state-icon {
+            font-size: 64px;
+            margin-bottom: 20px;
+            opacity: 0.3;
+        }
+
+
+
+        @media (max-width: 768px) {
+            .zone {
+                padding: 40px 16px;
+            }
+            .zone h1 {
+                font-size: 36px;
+            }
+            .zone h2 {
+                font-size: 28px;
+            }
+            .zone h3 {
+                font-size: 22px;
+            }
+            .zone p, .zone li {
+                font-size: 16px;
+            }
+            .two-column {
+                grid-template-columns: 1fr;
+                gap: 24px;
+            }
+            .qr-grid {
+                grid-template-columns: 1fr;
+            }
+            .navigation {
+                bottom: 20px;
+                right: 20px;
+            }
+            .slide-counter {
+                bottom: 20px;
+                left: 20px;
+            }
+
+        }
+
+        .content-box {
+            background: rgba(50, 184, 198, 0.1);
+            border: 1px solid var(--color-teal-300);
+            border-radius: var(--radius-lg);
+            padding: clamp(20px, 3vw, 32px);
+            margin: var(--space-20) auto;
+            backdrop-filter: blur(10px);
+            max-width: 1200px;
+            width: 90%;
+        }
+
+        .emoji {
+            font-size: 48px;
+            margin-bottom: var(--space-16);
+        }
+
+        .zone.active * {
+            animation: fadeInUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        }
+
+        .grid-3 {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 24px;
+            width: 90%;
+            max-width: 1300px;
+            margin: var(--space-32) auto;
+            padding: 0 3%;
+        }
+
+        .card {
+            background: rgba(50, 184, 198, 0.1);
+            border: 1px solid var(--color-teal-300);
+            border-radius: var(--radius-lg);
+            padding: 24px;
+            backdrop-filter: blur(10px);
+        }
+
+        .card h4 {
+            font-size: 20px;
+            font-weight: var(--font-weight-semibold);
+            color: var(--color-text);
+            margin-bottom: var(--space-12);
+        }
+
+        .card p {
+            font-size: 16px;
+            margin-bottom: 0;
+        }
+    </style>
+</head>
+<body>
+    <button class="admin-btn hidden" id="adminBtn" style="display: none;">Admin</button>
+    <button class="fullscreen-btn" id="fullscreenBtn" title="Toggle Fullscreen">
+        <svg id="expandIcon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3"></path>
+        </svg>
+        <svg id="compressIcon" style="display: none;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M8 3v3a2 2 0 0 1-2 2H3m18 0h-3a2 2 0 0 1-2-2V3m0 18v-3a2 2 0 0 1 2-2h3M3 16h3a2 2 0 0 1 2 2v3"></path>
+        </svg>
+    </button>
+
+    <div class="admin-panel" id="adminPanel">
+        <div class="admin-content">
+            <div class="admin-header">
+                <h2>Admin Panel - QR Code Management</h2>
+                <button class="admin-close" id="adminClose">×</button>
+            </div>
+            <div class="qr-upload-section" id="qrUploadSection"></div>
+            <button class="btn-save" id="saveBtn">Save Changes</button>
+        </div>
+    </div>
+
+    <div id="presentation">
+        <div class="progress-bar" id="progressBar"></div>
+        <div class="slide-counter" id="slideCounter">1 / 16</div>
+
+        <!-- Zone 1: Landing (PAGE 0) -->
+        <div class="zone active" data-zone="1">
+            <div class="landing-container">
+                <div class="landing-title">Welcome to the AI Workshop</div>
+                <div class="landing-subtitle">SESSION 1: TALKING TO AI</div>
+                <div class="landing-cta">
+                    <p><strong>Before we begin...</strong><br>Navigate to the Admin Control Center to setup your presentation resources</p>
+                </div>
+                <div class="scroll-hint" style="margin-top: 60px;">→ Press right arrow or scroll to continue →</div>
+            </div>
+        </div>
+
+        <!-- Zone 2: Admin Control Center (PAGE 1) -->
+        <div class="zone" data-zone="2">
+            <div class="admin-center-container">
+                <div class="admin-center-header">
+                    <div class="admin-center-title">
+                        <span>🎛️</span>
+                        <span>Presentation Setup</span>
+                    </div>
+                    <p class="admin-center-description">
+                        Configure your session resources before starting the presentation.
+                        Upload QR codes for participant access to tools and materials.
+                    </p>
+                </div>
+                
+                <div class="admin-center-main">
+                    <h3>Upload Session Resources</h3>
+                    <p>Add QR codes that participants can scan to access workshop materials, tools, and additional resources.</p>
+                    <button class="admin-btn-integrated" id="adminBtnIntegrated">
+                        <span class="icon">📤</span>
+                        <span>Upload QR Codes</span>
+                    </button>
+                </div>
+                
+                <div class="admin-center-footer">
+                    <p>✅ Setup complete? Ready to begin!</p>
+                    <p class="instruction">Use arrow keys to navigate to Session 1 when ready →</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Zone 3: SESSION 1 Title Slide (PAGE 2 - Presentation Starts Here) -->
+        <div class="zone" data-zone="3">
+            <h1>SESSION 1: TALKING TO AI</h1>
+            <p class="subtitle">Foundations of AI Communication &amp; Prompt Engineering</p>
+            <div class="content-box" style="margin-top: 60px;">
+                <p style="font-size: 24px; text-align: center; color: rgba(255,255,255,0.9);">Welcome to the official start of our workshop!</p>
+                <p style="font-size: 18px; text-align: center; margin-top: 20px; color: rgba(255,255,255,0.7);">Get ready for an interactive journey through AI communication</p>
+            </div>
+        </div>
+
+        <!-- Zone 4: Workshop Overview (PAGE 3) -->
+        <div class="zone" data-zone="4">
+            <h2>What We'll Cover Today</h2>
+            <p style="font-size: 18px; margin-bottom: 40px; color: rgba(255,255,255,0.7);">An interactive journey through AI communication</p>
+            <ul style="text-align: left;">
+                <li>Understanding the AI revolution and why it matters</li>
+                <li>Core platforms: ChatGPT, Claude, Gemini &amp; Perplexity</li>
+                <li>The art and science of prompt engineering</li>
+                <li>Live AI chat simulations showing best practices</li>
+                <li>Hands-on practice with real-world scenarios</li>
+                <li>Building your AI toolkit for success</li>
+            </ul>
+        </div>
+
+        <!-- Zone 5: AI Growth Stats -->
+        <div class="zone" data-zone="5">
+            <h2>Why AI Matters Now</h2>
+            <p style="font-size: 18px; margin-bottom: 16px; color: rgba(255,255,255,0.7);">Exponential growth across all sectors</p>
+            <div class="chart-container">
+                <img src="https://pplx-res.cloudinary.com/image/upload/v1756563537/pplx_project_search_images/f1f48464ca5365bfabbe003ea172d9ae775e697f.png" alt="AI Market Growth Chart" style="border-radius: 12px; border: 1px solid rgba(50, 184, 198, 0.3); max-height: 40vh; object-fit: contain;">
+            </div>
+            <div class="highlight">
+                <p style="text-align: center; font-size: clamp(16px, 2vw, 20px);"><strong>AI market projected to grow from $93B in 2024 to $250B by 2029</strong></p>
+                <p style="text-align: center; font-size: clamp(14px, 1.5vw, 16px); margin-top: 8px; color: rgba(255,255,255,0.7);">A 22% compound annual growth rate</p>
+            </div>
+        </div>
+
+        <!-- Zone 6: ChatGPT Dominance -->
+        <div class="zone" data-zone="6">
+            <h2>Unprecedented Adoption</h2>
+            <p style="font-size: 18px; margin-bottom: 16px; color: rgba(255,255,255,0.7);">ChatGPT's historic growth trajectory</p>
+            <div class="chart-container">
+                <img src="https://pplx-res.cloudinary.com/image/upload/v1755097452/pplx_project_search_images/cb0ef03ecdba3c78dade71049f3ceec009d83616.png" alt="ChatGPT User Growth" style="border-radius: 12px; border: 1px solid rgba(50, 184, 198, 0.3); max-height: 40vh; object-fit: contain;">
+            </div>
+            <div class="highlight">
+                <p style="text-align: center; font-size: clamp(16px, 2vw, 20px);"><strong>ChatGPT reached 100M users in just 2 months</strong> — faster than any technology in history</p>
+                <p style="text-align: center; font-size: clamp(14px, 1.5vw, 16px); margin-top: 8px; color: rgba(255,255,255,0.7);">Now serving 800M weekly users (October 2025) with 2.5B daily prompts</p>
+            </div>
+        </div>
+
+        <!-- Zone 7: Platform Comparison - UPDATED NOVEMBER 2025 -->
+        <div class="zone" data-zone="7">
+            <h2>AI Platform Landscape - November 2025</h2>
+            <p style="font-size: 18px; margin-bottom: 16px; color: rgba(255,255,255,0.7);">Current market share &amp; user statistics</p>
+            
+            <div class="grid-3" style="margin-top: 16px; margin-bottom: 16px; max-width: 1000px;">
+                <div class="stats-card">
+                    <div class="stat-number">81%</div>
+                    <div class="stat-label">ChatGPT Market Share</div>
+                    <div class="stat-label" style="margin-top: 8px; font-size: 13px;">800M weekly users</div>
+                </div>
+                <div class="stats-card">
+                    <div class="stat-number">11%</div>
+                    <div class="stat-label">Perplexity Market Share</div>
+                    <div class="stat-label" style="margin-top: 8px; font-size: 13px;">30M monthly users</div>
+                </div>
+                <div class="stats-card">
+                    <div class="stat-number">3%</div>
+                    <div class="stat-label">Gemini Market Share</div>
+                    <div class="stat-label" style="margin-top: 8px; font-size: 13px;">650M monthly users</div>
+                </div>
+            </div>
+            
+            <div class="highlight" style="margin-top: 16px;">
+                <p style="font-size: clamp(15px, 1.8vw, 18px); text-align: left; line-height: 1.6;">
+                    <strong>Platform Strengths (Nov 2025):</strong><br><br>
+                    <strong>ChatGPT:</strong> General tasks, creative writing, business productivity (8% quarterly growth)<br>
+                    <strong>Claude:</strong> Precision, long documents, research, compliance (14% quarterly growth, 1% share)<br>
+                    <strong>Gemini:</strong> Google integration, multimodal tasks, long context (5% quarterly growth)<br>
+                    <strong>Perplexity:</strong> Research, real-time answers, citations (10% quarterly growth)<br>
+                    <strong>Microsoft Copilot:</strong> 3.46% market share, enterprise integration
+                </p>
+            </div>
+            
+            <div class="content-box" style="margin-top: 16px; padding: 16px;">
+                <p style="text-align: center; font-size: clamp(14px, 1.6vw, 16px); margin-bottom: 8px;">
+                    <strong>AI Chatbot Market Size:</strong> $9.90B (2025) → $65.94B (2030)
+                </p>
+                <p style="text-align: center; font-size: clamp(13px, 1.4vw, 15px); color: rgba(255,255,255,0.7); margin-bottom: 0;">
+                    31.1% CAGR | 4.6B monthly ChatGPT visits
+                </p>
+            </div>
+        </div>
+
+        <!-- Zone 8: AI Chat Demo 1 - Good vs Bad Prompts -->
+        <div class="zone" data-zone="8">
+            <h2>Let's See AI in Action</h2>
+            <p style="font-size: 20px; margin-bottom: 40px; color: rgba(255,255,255,0.8);">Watch how prompt quality affects AI responses</p>
+            <div class="chat-container" id="chat1"></div>
+        </div>
+
+        <!-- Zone 9: Trust but Verify - Condensed -->
+        <div class="zone" data-zone="9">
+            <h2>Trust but Verify</h2>
+            <p style="font-size: 20px; margin-bottom: 40px; color: rgba(255,255,255,0.8);">While AI is powerful, always verify outputs before using them. AI can hallucinate, provide outdated information, or make errors.</p>
+            
+            <div class="content-box" style="text-align: left; max-width: 900px;">
+                <h3 style="color: var(--color-teal-300); margin-bottom: 24px; font-size: 24px; text-align: center;">Key Verification Practices</h3>
+                <ul style="list-style: none; padding-left: 0;">
+                    <li style="padding-left: 32px; position: relative; margin-bottom: 20px; font-size: 18px;">
+                        <span style="position: absolute; left: 0; color: var(--color-teal-300); font-size: 24px;">✓</span>
+                        Cross-reference with reliable sources
+                    </li>
+                    <li style="padding-left: 32px; position: relative; margin-bottom: 20px; font-size: 18px;">
+                        <span style="position: absolute; left: 0; color: var(--color-teal-300); font-size: 24px;">✓</span>
+                        Compare across multiple AI tools
+                    </li>
+                    <li style="padding-left: 32px; position: relative; margin-bottom: 20px; font-size: 18px;">
+                        <span style="position: absolute; left: 0; color: var(--color-teal-300); font-size: 24px;">✓</span>
+                        Use domain expertise to review
+                    </li>
+                    <li style="padding-left: 32px; position: relative; margin-bottom: 0; font-size: 18px;">
+                        <span style="position: absolute; left: 0; color: var(--color-teal-300); font-size: 24px;">✓</span>
+                        Treat AI as research assistant, not final answer
+                    </li>
+                </ul>
+            </div>
+            
+            <div class="highlight" style="margin-top: 40px; max-width: 900px;">
+                <p style="text-align: center; font-size: 20px; font-weight: 600; margin-bottom: 0;">
+                    💡 Best Practice: Use AI as a starting point, but always validate critical information
+                </p>
+            </div>
+        </div>
+
+        <!-- Zone 10: Latest AI Statistics (Nov 2025) -->
+        <div class="zone" data-zone="10">
+            <h2>The AI Landscape - November 2025</h2>
+            <p style="font-size: 18px; margin-bottom: 40px; color: rgba(255,255,255,0.7);">Latest data from October-November 2025</p>
+            <div class="grid-3" style="margin-top: 40px;">
+                <div class="stats-card">
+                    <div class="stat-number">800M</div>
+                    <div class="stat-label">ChatGPT Weekly Users</div>
+                    <div class="stat-label" style="margin-top: 8px; font-size: 14px;">81% Market Share</div>
+                </div>
+                <div class="stats-card">
+                    <div class="stat-number">30M</div>
+                    <div class="stat-label">Perplexity Monthly Users</div>
+                    <div class="stat-label" style="margin-top: 8px; font-size: 14px;">11% Market Share</div>
+                </div>
+                <div class="stats-card">
+                    <div class="stat-number">650M</div>
+                    <div class="stat-label">Gemini Monthly Users</div>
+                    <div class="stat-label" style="margin-top: 8px; font-size: 14px;">3% Market Share</div>
+                </div>
+            </div>
+            <div class="highlight" style="margin-top: 40px; text-align: center;">
+                <p style="font-size: 18px;"><strong>Claude:</strong> 1% market share • Sonnet 4.5 (Sept 2025) • Opus 4.1 (Aug 2025)<br>
+                <strong>Microsoft Copilot:</strong> 3% market share</p>
+            </div>
+        </div>
+
+        <!-- Zone 11: The CARE Framework -->
+        <div class="zone" data-zone="11">
+            <h2>The CARE Framework</h2>
+            <p style="font-size: 18px; margin-bottom: 32px; color: rgba(255,255,255,0.7);">A proven structure for effective AI prompts</p>
+            <ul style="text-align: left;">
+                <li><strong>Context:</strong> Set the stage — what's the situation?</li>
+                <li><strong>Action:</strong> What do you want the AI to do?</li>
+                <li><strong>Result:</strong> What outcome are you looking for?</li>
+                <li><strong>Example:</strong> Show what good looks like (optional)</li>
+            </ul>
+            <div class="highlight" style="margin-top: 32px;">
+                <p style="text-align: left;"><strong>Example Prompt:</strong><br><br>"I'm a small business owner [Context] preparing a social media strategy [Action] to increase engagement by 20% [Result]. Here's a past post that worked well: [Example shows format and tone]"</p>
+            </div>
+        </div>
+
+        <!-- Zone 12: AI Chat Demo 3 - Platform Comparison -->
+        <div class="zone" data-zone="12">
+            <h2>Comparing AI Platforms</h2>
+            <p style="font-size: 20px; margin-bottom: 40px; color: rgba(255,255,255,0.8);">Different tools, different strengths</p>
+            <div class="chat-container" id="chat3"></div>
+        </div>
+
+        <!-- Zone 13: Practical Tips -->
+        <div class="zone" data-zone="13">
+            <h2>Practical Tips for Success</h2>
+            <div class="grid-3">
+                <div class="card">
+                    <h4>✅ Start Simple</h4>
+                    <p>Begin with clear, straightforward prompts. Add complexity as needed.</p>
+                </div>
+                <div class="card">
+                    <h4>✅ Iterate &amp; Refine</h4>
+                    <p>Use follow-up questions to guide the AI toward better outputs.</p>
+                </div>
+                <div class="card">
+                    <h4>✅ Save What Works</h4>
+                    <p>Build a library of effective prompts for recurring tasks.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Zone 14: Hands-On Exercise -->
+        <div class="zone" data-zone="14">
+            <h2>🛠️ Hands-On Exercise</h2>
+            <div class="content-box">
+                <h3>Your Challenge:</h3>
+                <p style="font-size: 22px; margin-bottom: 24px;">Pick a real task from your work or life and craft a prompt using the CARE framework.</p>
+                <h3 style="margin-top: 24px;">Try it with:</h3>
+                <ul>
+                    <li>ChatGPT for creative tasks</li>
+                    <li>Claude for analytical work</li>
+                    <li>Perplexity for research</li>
+                </ul>
+            </div>
+            <p style="margin-top: 32px; font-size: 18px; color: var(--color-text-secondary);">Take 10-15 minutes to experiment and compare results</p>
+        </div>
+
+        <!-- Zone 15: Resources -->
+        <div class="zone" data-zone="15">
+            <h2>📚 Session Resources</h2>
+            <div class="qr-grid" id="qrResourceGrid"></div>
+        </div>
+
+        <!-- Zone 16: Key Takeaways -->
+        <div class="zone" data-zone="16">
+            <h2>🎯 Key Takeaways</h2>
+            <p style="font-size: 18px; margin-bottom: 32px; color: rgba(255,255,255,0.7);">Remember these core principles</p>
+            <ul style="text-align: left;">
+                <li><strong>AI is a tool, not a replacement</strong> — you bring the expertise and judgment</li>
+                <li><strong>Quality prompts = Quality results</strong> — invest time in clear communication</li>
+                <li><strong>Choose the right tool</strong> — ChatGPT (81%), Perplexity (11%), or Claude for your needs</li>
+                <li><strong>Iterate and refine</strong> — conversation improves output</li>
+                <li><strong>Always verify</strong> — AI can be confident and wrong (Trust but Verify!)</li>
+                <li><strong>Build your library</strong> — save successful prompts for future use</li>
+            </ul>
+        </div>
+
+        <!-- Zone 17: Thank You -->
+        <div class="zone" data-zone="17">
+            <h1>Thank You!</h1>
+            <div class="content-box" style="margin-top: 40px;">
+                <h3>Next Session Preview</h3>
+                <p style="font-size: 22px;">We'll dive deeper into advanced prompting techniques, automation, and building AI-powered workflows.</p>
+            </div>
+            <p class="subtitle" style="margin-top: 40px;">Questions? Let's discuss!</p>
+            <p style="margin-top: 24px; font-size: 16px; color: rgba(255,255,255,0.5);">This presentation was created with AI assistance — a demo of what's possible!</p>
+        </div>
+
+
+    </div>
+
+    <script>
+        // QR Code Data Storage (embedded in HTML)
+        let qrData = [];
+
+        let currentZone = 1;
+        const totalZones = 17;
+        
+        // Fullscreen API support check
+        const fullscreenEnabled = document.fullscreenEnabled || 
+                                  document.webkitFullscreenEnabled || 
+                                  document.mozFullScreenEnabled || 
+                                  document.msFullscreenEnabled;
+        const zones = document.querySelectorAll('.zone');
+        const progressBar = document.getElementById('progressBar');
+        const slideCounter = document.getElementById('slideCounter');
+        const adminBtn = document.getElementById('adminBtn');
+        const adminPanel = document.getElementById('adminPanel');
+        const adminClose = document.getElementById('adminClose');
+        const saveBtn = document.getElementById('saveBtn');
+        const fullscreenBtn = document.getElementById('fullscreenBtn');
+        const expandIcon = document.getElementById('expandIcon');
+        const compressIcon = document.getElementById('compressIcon');
+
+        function updateZone() {
+            zones.forEach((zone, index) => {
+                zone.classList.remove('active');
+                if (index + 1 === currentZone) {
+                    zone.classList.add('active');
+                    // Trigger animations for active zone
+                    if (currentZone === 8) initChat1();
+
+                    if (currentZone === 12) initChat3();
+                    updateAdminButtonVisibility();
+                }
+            });
+
+            // Update progress bar
+            const progress = (currentZone / totalZones) * 100;
+            progressBar.style.width = progress + '%';
+
+            // Update counter
+            slideCounter.textContent = currentZone + ' / ' + totalZones;
+        }
+
+        function nextZone() {
+            if (currentZone < totalZones) {
+                currentZone++;
+                updateZone();
+            }
+        }
+
+        function prevZone() {
+            if (currentZone > 1) {
+                currentZone--;
+                updateZone();
+            }
+        }
+
+
+
+        function updateAdminButtonVisibility() {
+            // Admin button is now integrated into Zone 2, no overlay button needed
+            // Hide the old overlay button completely
+            if (adminBtn) {
+                adminBtn.style.display = 'none';
+            }
+        }
+
+        // Admin Panel Functions
+        function openAdminPanel() {
+            adminPanel.classList.add('active');
+            renderQRUploadSection();
+        }
+
+        function closeAdminPanel() {
+            adminPanel.classList.remove('active');
+        }
+
+        function renderQRUploadSection() {
+            const section = document.getElementById('qrUploadSection');
+            section.innerHTML = '<h3 style="margin-bottom: 20px;">QR Code Slots (Max 5)</h3>';
+            
+            for (let i = 0; i < 5; i++) {
+                const item = qrData[i] || { title: '', description: '', image: '' };
+                section.innerHTML += `
+                    <div class="qr-upload-item">
+                        <h4 style="margin-bottom: 12px; color: var(--color-teal-300);">QR Code ${i + 1}</h4>
+                        <input type="text" placeholder="Title" id="title${i}" value="${item.title}">
+                        <textarea placeholder="Description" id="desc${i}">${item.description}</textarea>
+                        <input type="file" accept="image/*" id="file${i}" onchange="handleFileUpload(${i})">
+                        ${item.image ? `<img src="${item.image}" class="qr-preview" id="preview${i}">` : ''}
+                        ${item.image ? `<button class="btn-delete" onclick="deleteQR(${i})">Delete QR ${i + 1}</button>` : ''}
+                    </div>
+                `;
+            }
+        }
+
+        function handleFileUpload(index) {
+            const file = document.getElementById(`file${index}`).files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    const img = document.createElement('img');
+                    img.src = e.target.result;
+                    img.className = 'qr-preview';
+                    img.id = `preview${index}`;
+                    
+                    const existingPreview = document.getElementById(`preview${index}`);
+                    if (existingPreview) {
+                        existingPreview.src = e.target.result;
+                    } else {
+                        document.getElementById(`file${index}`).parentNode.appendChild(img);
+                    }
+                };
+                reader.readAsDataURL(file);
+            }
+        }
+
+        function deleteQR(index) {
+            if (confirm(`Delete QR Code ${index + 1}?`)) {
+                qrData[index] = { title: '', description: '', image: '' };
+                renderQRUploadSection();
+                updateResourcesZone();
+            }
+        }
+
+        function saveQRData() {
+            qrData = [];
+            for (let i = 0; i < 5; i++) {
+                const title = document.getElementById(`title${i}`).value;
+                const desc = document.getElementById(`desc${i}`).value;
+                const preview = document.getElementById(`preview${i}`);
+                const image = preview ? preview.src : '';
+                
+                if (title || desc || image) {
+                    qrData.push({ title, description: desc, image });
+                }
+            }
+            updateResourcesZone();
+            alert('QR codes saved successfully!');
+            closeAdminPanel();
+        }
+
+        function updateResourcesZone() {
+            const grid = document.getElementById('qrResourceGrid');
+            
+            if (qrData.length === 0) {
+                grid.innerHTML = `
+                    <div class="empty-state" style="grid-column: 1 / -1;">
+                        <div class="empty-state-icon">📊</div>
+                        <p style="font-size: 20px;">No resources added yet</p>
+                        <p style="font-size: 16px; margin-top: 12px;">Use the Admin panel to add QR codes</p>
+                    </div>
+                `;
+            } else {
+                grid.innerHTML = '';
+                qrData.forEach((item, index) => {
+                    if (item.title || item.image) {
+                        grid.innerHTML += `
+                            <div class="qr-card" style="animation-delay: ${0.2 + index * 0.1}s;">
+                                ${item.image ? `<img src="${item.image}" style="width: 150px; height: 150px; margin: 0 auto 16px; display: block; border-radius: 8px;">` : '<div class="qr-placeholder">QR Code</div>'}
+                                <h4>${item.title || 'Resource ' + (index + 1)}</h4>
+                                ${item.description ? `<p style="font-size: 14px; color: rgba(255,255,255,0.6); margin-top: 8px;">${item.description}</p>` : ''}
+                            </div>
+                        `;
+                    }
+                });
+            }
+        }
+
+        // AI Chat Simulations
+        let chat1Initialized = false;
+        let chat2Initialized = false;
+        let chat3Initialized = false;
+
+        function initChat1() {
+            if (chat1Initialized) return;
+            chat1Initialized = true;
+            const container = document.getElementById('chat1');
+            
+            setTimeout(() => addMessage(container, 'Tell me about marketing', 'user'), 500);
+            setTimeout(() => addTypingIndicator(container), 1500);
+            setTimeout(() => {
+                removeTypingIndicator(container);
+                addMessage(container, 'Marketing is a business function that involves promoting and selling products or services. It encompasses various strategies...', 'ai');
+            }, 3000);
+            
+            setTimeout(() => addMessage(container, 'Explain 3 digital marketing strategies for a B2B SaaS company targeting enterprise clients, with budget-friendly examples', 'user'), 4500);
+            setTimeout(() => addTypingIndicator(container), 5500);
+            setTimeout(() => {
+                removeTypingIndicator(container);
+                addMessage(container, '1. Content Marketing & SEO: Create technical whitepapers and case studies targeting C-level decision makers. Budget: $2-5K/month for content creation.\n\n2. LinkedIn Account-Based Marketing: Run targeted campaigns to specific companies with 1000+ employees. Budget: $3-8K/month.\n\n3. Webinar & Virtual Events: Host educational sessions solving specific enterprise pain points. Budget: $1-3K per event.', 'ai');
+            }, 7500);
+        }
+
+
+
+        function initChat3() {
+            if (chat3Initialized) return;
+            chat3Initialized = true;
+            const container = document.getElementById('chat3');
+            
+            setTimeout(() => addMessage(container, 'Which AI tool should I use for research?', 'user'), 500);
+            setTimeout(() => addTypingIndicator(container), 1500);
+            setTimeout(() => {
+                removeTypingIndicator(container);
+                addMessage(container, '🔍 Perplexity: Best for research with real-time citations (780M queries/month)\n\n🤖 ChatGPT: General content creation, 800M weekly users\n\n📚 Claude: Long document analysis with 200K context window\n\n🌐 Gemini: Google Workspace integration (650M monthly users)', 'ai');
+            }, 4000);
+        }
+
+        function addMessage(container, text, type) {
+            const messageDiv = document.createElement('div');
+            messageDiv.className = `chat-message ${type}`;
+            messageDiv.innerHTML = `<div class="message-bubble ${type}">${text.replace(/\n/g, '<br>')}</div>`;
+            container.appendChild(messageDiv);
+            container.scrollTop = container.scrollHeight;
+        }
+
+        function addTypingIndicator(container) {
+            const typingDiv = document.createElement('div');
+            typingDiv.className = 'chat-message';
+            typingDiv.id = 'typing-indicator';
+            typingDiv.innerHTML = `
+                <div class="typing-indicator">
+                    <div class="typing-dot"></div>
+                    <div class="typing-dot"></div>
+                    <div class="typing-dot"></div>
+                </div>
+            `;
+            container.appendChild(typingDiv);
+            container.scrollTop = container.scrollHeight;
+        }
+
+        function removeTypingIndicator(container) {
+            const indicator = container.querySelector('#typing-indicator');
+            if (indicator) indicator.remove();
+        }
+
+        // Event listeners
+        const adminBtnIntegrated = document.getElementById('adminBtnIntegrated');
+        if (adminBtnIntegrated) {
+            adminBtnIntegrated.addEventListener('click', openAdminPanel);
+        }
+        if (adminBtn) {
+            adminBtn.addEventListener('click', openAdminPanel);
+        }
+        adminClose.addEventListener('click', closeAdminPanel);
+        saveBtn.addEventListener('click', saveQRData);
+
+        // Keyboard navigation
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowRight' || e.key === 'ArrowDown' || e.key === ' ') {
+                e.preventDefault();
+                nextZone();
+            } else if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') {
+                e.preventDefault();
+                prevZone();
+            } else if (e.key === 'Escape') {
+                closeAdminPanel();
+            } else if (e.key === 'Home') {
+                currentZone = 1;
+                updateZone();
+            } else if (e.key === 'End') {
+                currentZone = totalZones;
+                updateZone();
+            } else if (e.key === 'f' || e.key === 'F') {
+                // Toggle fullscreen using keyboard shortcut
+                if (fullscreenEnabled && fullscreenBtn && fullscreenBtn.classList.contains('visible')) {
+                    toggleFullscreen();
+                }
+            }
+        });
+
+        // Touch/swipe support
+        let touchStartX = 0;
+        let touchEndX = 0;
+
+        document.addEventListener('touchstart', (e) => {
+            touchStartX = e.changedTouches[0].screenX;
+        });
+
+        document.addEventListener('touchend', (e) => {
+            touchEndX = e.changedTouches[0].screenX;
+            handleSwipe();
+        });
+
+        function handleSwipe() {
+            if (touchEndX < touchStartX - 50) {
+                nextZone();
+            }
+            if (touchEndX > touchStartX + 50) {
+                prevZone();
+            }
+        }
+
+        // Scroll navigation DISABLED - use arrow keys only
+        // This prevents accidental slide changes when trying to scroll content
+        // Users can navigate with arrow keys, space, or swipe gestures
+
+        // Fullscreen API: Cross-browser
+function isFullscreen() {
+    return document.fullscreenElement || document.webkitFullscreenElement || 
+           document.mozFullScreenElement || document.msFullscreenElement;
+}
+
+function toggleFullscreen() {
+    if (!isFullscreen()) {
+        if (document.documentElement.requestFullscreen) {
+            document.documentElement.requestFullscreen();
+        } else if (document.documentElement.webkitRequestFullscreen) {
+            document.documentElement.webkitRequestFullscreen();
+        } else if (document.documentElement.mozRequestFullScreen) {
+            document.documentElement.mozRequestFullScreen();
+        } else if (document.documentElement.msRequestFullscreen) {
+            document.documentElement.msRequestFullscreen();
+        }
+    } else {
+        if (document.exitFullscreen) {
+            document.exitFullscreen();
+        } else if (document.webkitExitFullscreen) {
+            document.webkitExitFullscreen();
+        } else if (document.mozCancelFullScreen) {
+            document.mozCancelFullScreen();
+        } else if (document.msExitFullscreen) {
+            document.msExitFullscreen();
+        }
+    }
+}
+
+function updateFullscreenButton() {
+    if (isFullscreen()) {
+        expandIcon.style.display = 'none';
+        compressIcon.style.display = 'block';
+        fullscreenBtn.title = 'Exit Fullscreen';
+    } else {
+        expandIcon.style.display = 'block';
+        compressIcon.style.display = 'none';
+        fullscreenBtn.title = 'Enter Fullscreen';
+    }
+}
+
+if (fullscreenBtn) {
+    fullscreenBtn.addEventListener('click', function(e) {
+        e.stopPropagation();
+        toggleFullscreen();
+    });
+}
+document.addEventListener('fullscreenchange', updateFullscreenButton);
+document.addEventListener('webkitfullscreenchange', updateFullscreenButton);
+document.addEventListener('mozfullscreenchange', updateFullscreenButton);
+document.addEventListener('MSFullscreenChange', updateFullscreenButton);
+updateFullscreenButton();
+// Initialize
+        updateZone();
+        updateResourcesZone();
+        updateAdminButtonVisibility();
+    </script>
+</body>
+</html>

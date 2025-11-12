@@ -18,16 +18,16 @@ export function MobileNav() {
         {navItems.map((item) => {
           const isActive = location === item.url;
           return (
-            <Link key={item.title} href={item.url}>
-              <a
-                className={`flex flex-col items-center justify-center gap-1 min-w-[60px] h-full rounded-lg hover-elevate active-elevate-2 transition-colors ${
-                  isActive ? "text-primary" : "text-muted-foreground"
-                }`}
-                data-testid={`mobile-nav-${item.title.toLowerCase()}`}
-              >
-                <item.icon className={`h-5 w-5 ${isActive ? "fill-current" : ""}`} />
-                <span className="text-xs font-medium">{item.title}</span>
-              </a>
+            <Link 
+              key={item.title} 
+              href={item.url}
+              className={`flex flex-col items-center justify-center gap-1 min-w-[60px] h-full rounded-lg hover-elevate active-elevate-2 transition-colors ${
+                isActive ? "text-primary" : "text-muted-foreground"
+              }`}
+              data-testid={`mobile-nav-${item.title.toLowerCase()}`}
+            >
+              <item.icon className={`h-5 w-5 ${isActive ? "fill-current" : ""}`} />
+              <span className="text-xs font-medium">{item.title}</span>
             </Link>
           );
         })}
