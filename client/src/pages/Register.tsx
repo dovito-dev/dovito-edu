@@ -56,10 +56,7 @@ export default function Register() {
   };
 
   const handleGoogleRegister = () => {
-    toast({
-      title: "Coming Soon",
-      description: "Google OAuth integration is coming soon!",
-    });
+    window.location.href = "/api/auth/google";
   };
 
   return (

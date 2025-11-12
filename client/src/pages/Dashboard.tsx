@@ -1,11 +1,27 @@
 import { ArrowRight, Presentation, Wrench, FileText, Share2 } from "lucide-react";
 import { Link } from "wouter";
 import { useQuery } from "@tanstack/react-query";
+import { useEffect } from "react";
+import { useToast } from "@/hooks/use-toast";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import type { Workshop, AITool, Prompt, Session } from "@shared/schema";
 
 export default function Dashboard() {
+  const { toast } = useToast();
+
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    const authStatus = params.get("auth");
+    
+    if (authStatus === "success") {
+      toast({
+        title: "Welcome!",
+        description: "You've successfully signed in with Google.",
+      });
+      window.history.replaceState({}, '', '/dashboard');
+    }
+  }, [toast]);
   const { data: workshops = [] } = useQuery<Workshop[]>({
     queryKey: ["/api/workshops"],
   });

@@ -28,6 +28,20 @@ export default function Login() {
     }
   }, [user, setLocation]);
 
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    const authStatus = params.get("auth");
+    
+    if (authStatus === "error") {
+      toast({
+        title: "Authentication Failed",
+        description: "Unable to sign in with Google. Please try again.",
+        variant: "destructive",
+      });
+      window.history.replaceState({}, '', '/login');
+    }
+  }, [toast]);
+
   const loginMutation = useMutation({
     mutationFn: async (credentials: { email: string; password: string }) => {
       const res = await apiRequest("POST", "/api/login", credentials);
@@ -55,10 +69,7 @@ export default function Login() {
   };
 
   const handleGoogleLogin = () => {
-    toast({
-      title: "Coming Soon",
-      description: "Google OAuth integration is coming soon!",
-    });
+    window.location.href = "/api/auth/google";
   };
 
   return (

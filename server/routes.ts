@@ -2,6 +2,8 @@ import express, { type Express } from "express";
 import { createServer, type Server } from "http";
 import session from "express-session";
 import createMemoryStore from "memorystore";
+import passport from "passport";
+import { Strategy as GoogleStrategy } from "passport-google-oauth20";
 import bcrypt from "bcrypt";
 import multer from "multer";
 import path from "path";
@@ -68,9 +70,70 @@ export async function registerRoutes(app: Express): Promise<Server> {
     })
   );
 
+  app.use(passport.initialize());
+  app.use(passport.session());
+
+  passport.serializeUser((user: any, done) => {
+    done(null, user.id);
+  });
+
+  passport.deserializeUser(async (id: string, done) => {
+    try {
+      const user = await storage.getUser(id);
+      done(null, user);
+    } catch (error) {
+      done(error, null);
+    }
+  });
+
+  if (process.env.GOOGLE_CLIENT_ID && process.env.GOOGLE_CLIENT_SECRET) {
+    passport.use(
+      new GoogleStrategy(
+        {
+          clientID: process.env.GOOGLE_CLIENT_ID,
+          clientSecret: process.env.GOOGLE_CLIENT_SECRET,
+          callbackURL: "/auth/google/callback",
+        },
+        async (_accessToken, _refreshToken, profile, done) => {
+          try {
+            const email = profile.emails?.[0]?.value;
+            if (!email) {
+              return done(new Error("No email found in Google profile"), undefined);
+            }
+
+            let user = await storage.getUserByGoogleId(profile.id);
+
+            if (!user) {
+              user = await storage.getUserByEmail(email);
+              
+              if (user) {
+                user = await storage.updateUser(user.id, { googleId: profile.id });
+              } else {
+                user = await storage.createUser({
+                  email,
+                  googleId: profile.id,
+                  name: profile.displayName || null,
+                  password: null,
+                });
+              }
+            }
+
+            return done(null, user);
+          } catch (error) {
+            return done(error as Error, undefined);
+          }
+        }
+      )
+    );
+  }
+
   app.post("/api/register", async (req, res) => {
     try {
-      const { email, password, name } = insertUserSchema.parse(req.body);
+      const { email, password, name } = req.body;
+
+      if (!email || !password) {
+        return res.status(400).json({ message: "Email and password required" });
+      }
 
       const existingUser = await storage.getUserByEmail(email);
       if (existingUser) {
@@ -108,7 +171,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       }
 
       const user = await storage.getUserByEmail(email);
-      if (!user) {
+      if (!user || !user.password) {
         return res.status(401).json({ message: "Invalid credentials" });
       }
 
@@ -137,6 +200,23 @@ export async function registerRoutes(app: Express): Promise<Server> {
       res.json({ message: "Logged out successfully" });
     });
   });
+
+  app.get("/api/auth/google", (req, res, next) => {
+    if (!process.env.GOOGLE_CLIENT_ID || !process.env.GOOGLE_CLIENT_SECRET) {
+      return res.status(503).json({ message: "Google OAuth is not configured" });
+    }
+    passport.authenticate("google", { scope: ["profile", "email"] })(req, res, next);
+  });
+
+  app.get("/auth/google/callback", 
+    passport.authenticate("google", { failureRedirect: "/login?auth=error" }),
+    (req, res) => {
+      if (req.user) {
+        req.session.userId = (req.user as any).id;
+      }
+      res.redirect("/dashboard?auth=success");
+    }
+  );
 
   app.get("/api/me", async (req, res) => {
     if (!req.session.userId) {
