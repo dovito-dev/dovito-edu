@@ -3,6 +3,7 @@ import { Link } from "wouter";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { ThemeToggle } from "@/components/ThemeToggle";
+import LightRays from "@/components/LightRays";
 import logoPath from "@assets/dovito_edu_1762919756790.png";
 
 const features = [
@@ -55,6 +56,18 @@ export default function Landing() {
       </header>
 
       <section className="relative h-screen flex items-center justify-center overflow-hidden bg-gradient-to-b from-primary/5 to-background">
+        <div className="absolute inset-0">
+          <LightRays 
+            raysOrigin="top-center" 
+            raysColor="#2563eb"
+            raysSpeed={0.3}
+            lightSpread={0.4}
+            rayLength={1.2}
+            pulsating={true}
+            fadeDistance={0.8}
+            saturation={0.6}
+          />
+        </div>
         <div className="relative z-10 container mx-auto px-4 text-center">
           <h2 className="font-heading font-bold text-5xl md:text-6xl mb-6">
             Elevate Your AI Journey
