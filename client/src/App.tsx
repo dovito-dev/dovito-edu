@@ -25,6 +25,8 @@ import Contact from "@/pages/Contact";
 import AdminDashboard from "@/pages/admin/AdminDashboard";
 import AdminAITools from "@/pages/admin/AdminAITools";
 import AdminMediaProfiles from "@/pages/admin/AdminMediaProfiles";
+import AdminWorkshops from "@/pages/admin/AdminWorkshops";
+import AdminPrompts from "@/pages/admin/AdminPrompts";
 
 function AuthenticatedLayout({ children }: { children: React.ReactNode }) {
   const style = {
@@ -110,6 +112,16 @@ function Router() {
       <Route path="/admin/media-profiles">
         <AuthenticatedLayout>
           <AdminMediaProfiles />
+        </AuthenticatedLayout>
+      </Route>
+      <Route path="/admin/workshops">
+        <AuthenticatedLayout>
+          <AdminWorkshops />
+        </AuthenticatedLayout>
+      </Route>
+      <Route path="/admin/prompts">
+        <AuthenticatedLayout>
+          <AdminPrompts />
         </AuthenticatedLayout>
       </Route>
       
