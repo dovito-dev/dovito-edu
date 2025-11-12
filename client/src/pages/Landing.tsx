@@ -3,7 +3,6 @@ import { Link } from "wouter";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { ThemeToggle } from "@/components/ThemeToggle";
-import LightRays from "@/components/LightRays";
 
 const features = [
   {
@@ -49,20 +48,7 @@ export default function Landing() {
         </div>
       </header>
 
-      <section className="relative h-screen flex items-center justify-center overflow-hidden">
-        <div className="absolute inset-0">
-          <LightRays
-            raysOrigin="top-center"
-            raysColor="#3b82f6"
-            raysSpeed={1}
-            lightSpread={1}
-            rayLength={1.5}
-            followMouse={true}
-            mouseInfluence={0.1}
-            noiseAmount={0}
-            distortion={0}
-          />
-        </div>
+      <section className="relative h-screen flex items-center justify-center overflow-hidden bg-gradient-to-b from-primary/5 to-background">
         <div className="relative z-10 container mx-auto px-4 text-center">
           <h2 className="font-heading font-bold text-5xl md:text-6xl mb-6">
             Elevate Your AI Journey
