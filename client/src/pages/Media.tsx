@@ -1,6 +1,6 @@
 import { useState } from "react";
-import { ExternalLink, Star } from "lucide-react";
-import { SiYoutube, SiInstagram, SiX, SiLinkedin, SiTiktok, SiGlobe } from "react-icons/si";
+import { ExternalLink, Star, Globe } from "lucide-react";
+import { SiYoutube, SiInstagram, SiX, SiLinkedin, SiTiktok } from "react-icons/si";
 import { useQuery } from "@tanstack/react-query";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -159,7 +159,7 @@ export default function Media() {
                     onClick={() => window.open(profile.websiteUrl!, "_blank")}
                     data-testid={`button-website-${profile.id}`}
                   >
-                    <SiGlobe className="h-4 w-4" />
+                    <Globe className="h-4 w-4" />
                   </Button>
                 )}
               </div>
