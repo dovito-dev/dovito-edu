@@ -985,35 +985,6 @@
             </div>
         </div>
 
-        <!-- Zone 2: Admin Control Center (PAGE 1) -->
-        <div class="zone" data-zone="2">
-            <div class="admin-center-container">
-                <div class="admin-center-header">
-                    <div class="admin-center-title">
-                        <span>🎛️</span>
-                        <span>Presentation Setup</span>
-                    </div>
-                    <p class="admin-center-description">
-                        Configure your session resources before starting the presentation.
-                        Upload QR codes for participant access to tools and materials.
-                    </p>
-                </div>
-                
-                <div class="admin-center-main">
-                    <h3>Upload Session Resources</h3>
-                    <p>Add QR codes that participants can scan to access workshop materials, tools, and additional resources.</p>
-                    <button class="admin-btn-integrated" id="adminBtnIntegrated">
-                        <span class="icon">📤</span>
-                        <span>Upload QR Codes</span>
-                    </button>
-                </div>
-                
-                <div class="admin-center-footer">
-                    <p>✅ Setup complete? Ready to begin!</p>
-                    <p class="instruction">Use arrow keys to navigate to Session 1 when ready →</p>
-                </div>
-            </div>
-        </div>
 
         <!-- Zone 3: SESSION 1 Title Slide (PAGE 2 - Presentation Starts Here) -->
         <div class="zone" data-zone="3">
@@ -1234,14 +1205,8 @@
             <p style="margin-top: 32px; font-size: 18px; color: var(--color-text-secondary);">Take 10-15 minutes to experiment and compare results</p>
         </div>
 
-        <!-- Zone 15: Resources -->
+        <!-- Zone 15: Key Takeaways -->
         <div class="zone" data-zone="15">
-            <h2>📚 Session Resources</h2>
-            <div class="qr-grid" id="qrResourceGrid"></div>
-        </div>
-
-        <!-- Zone 16: Key Takeaways -->
-        <div class="zone" data-zone="16">
             <h2>🎯 Key Takeaways</h2>
             <p style="font-size: 18px; margin-bottom: 32px; color: rgba(255,255,255,0.7);">Remember these core principles</p>
             <ul style="text-align: left;">
@@ -1254,8 +1219,8 @@
             </ul>
         </div>
 
-        <!-- Zone 17: Thank You -->
-        <div class="zone" data-zone="17">
+        <!-- Zone 16: Thank You -->
+        <div class="zone" data-zone="16">
             <h1>Thank You!</h1>
             <div class="content-box" style="margin-top: 40px;">
                 <h3>Next Session Preview</h3>
@@ -1263,6 +1228,25 @@
             </div>
             <p class="subtitle" style="margin-top: 40px;">Questions? Let's discuss!</p>
             <p style="margin-top: 24px; font-size: 16px; color: rgba(255,255,255,0.5);">This presentation was created with AI assistance — a demo of what's possible!</p>
+        </div>
+
+        <!-- Zone 17: Visit Our Platform -->
+        <div class="zone" data-zone="17">
+            <h1>Continue Learning</h1>
+            <div class="content-box" style="margin-top: 40px; text-align: center;">
+                <h3 style="margin-bottom: 32px;">Visit Dovito EDU Platform</h3>
+                <div style="background: white; padding: 32px; border-radius: 16px; display: inline-block; box-shadow: 0 8px 24px rgba(0,0,0,0.2);">
+                    <img src="https://api.qrserver.com/v1/create-qr-code/?size=300x300&data=https://edu.dovito.com" 
+                         alt="QR Code to edu.dovito.com" 
+                         style="width: 300px; height: 300px; display: block;">
+                </div>
+                <p style="font-size: 24px; margin-top: 32px; color: var(--color-teal-300);">
+                    <strong>edu.dovito.com</strong>
+                </p>
+                <p style="margin-top: 16px; font-size: 18px; color: rgba(255,255,255,0.7);">
+                    Scan to access all workshop materials, AI tools directory, and more resources!
+                </p>
+            </div>
         </div>
 
 
@@ -1273,7 +1257,7 @@
         let qrData = [];
 
         let currentZone = 1;
-        const totalZones = 17;
+        const totalZones = 16;
         
         // Fullscreen API support check
         const fullscreenEnabled = document.fullscreenEnabled || 
