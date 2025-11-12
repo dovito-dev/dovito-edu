@@ -1,5 +1,5 @@
 import { sql } from "drizzle-orm";
-import { pgTable, text, varchar, integer } from "drizzle-orm/pg-core";
+import { pgTable, text, varchar, integer, timestamp } from "drizzle-orm/pg-core";
 import { createInsertSchema } from "drizzle-zod";
 import { z } from "zod";
 
@@ -46,6 +46,37 @@ export const mediaProfiles = pgTable("media_profiles", {
   sortOrder: integer("sort_order").default(0),
 });
 
+export const workshops = pgTable("workshops", {
+  id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
+  title: text("title").notNull(),
+  description: text("description").notNull(),
+  sortOrder: integer("sort_order").default(0),
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+});
+
+export const sessions = pgTable("sessions", {
+  id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
+  workshopId: varchar("workshop_id").notNull().references(() => workshops.id, { onDelete: "cascade" }),
+  title: text("title").notNull(),
+  description: text("description"),
+  duration: text("duration"),
+  htmlContentUrl: text("html_content_url"),
+  videoUrl: text("video_url"),
+  sortOrder: integer("sort_order").default(0),
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+});
+
+export const prompts = pgTable("prompts", {
+  id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
+  title: text("title").notNull(),
+  content: text("content").notNull(),
+  category: text("category").notNull(),
+  tags: text("tags").array(),
+  featured: integer("featured").default(0),
+  sortOrder: integer("sort_order").default(0),
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+});
+
 export const insertUserSchema = createInsertSchema(users).omit({
   id: true,
 });
@@ -58,6 +89,21 @@ export const insertMediaProfileSchema = createInsertSchema(mediaProfiles).omit({
   id: true,
 });
 
+export const insertWorkshopSchema = createInsertSchema(workshops).omit({
+  id: true,
+  createdAt: true,
+});
+
+export const insertSessionSchema = createInsertSchema(sessions).omit({
+  id: true,
+  createdAt: true,
+});
+
+export const insertPromptSchema = createInsertSchema(prompts).omit({
+  id: true,
+  createdAt: true,
+});
+
 export type InsertUser = z.infer<typeof insertUserSchema>;
 export type User = typeof users.$inferSelect;
 
@@ -66,3 +112,12 @@ export type AITool = typeof aiTools.$inferSelect;
 
 export type InsertMediaProfile = z.infer<typeof insertMediaProfileSchema>;
 export type MediaProfile = typeof mediaProfiles.$inferSelect;
+
+export type InsertWorkshop = z.infer<typeof insertWorkshopSchema>;
+export type Workshop = typeof workshops.$inferSelect;
+
+export type InsertSession = z.infer<typeof insertSessionSchema>;
+export type Session = typeof sessions.$inferSelect;
+
+export type InsertPrompt = z.infer<typeof insertPromptSchema>;
+export type Prompt = typeof prompts.$inferSelect;
