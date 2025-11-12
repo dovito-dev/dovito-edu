@@ -38,41 +38,6 @@ export default function Workshop() {
           </div>
         </CardContent>
       </Card>
-
-      <Card className="bg-muted/50">
-        <CardHeader>
-          <CardTitle>More Sessions Coming Soon</CardTitle>
-          <CardDescription>
-            Additional workshop sessions will be available here as they're published.
-          </CardDescription>
-        </CardHeader>
-        <CardContent>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-            {[
-              "Session 2: Understanding Large Language Models (LLMs)",
-              "Session 3: AI Applications in Mortgage Operations",
-              "Session 4: Prompt Engineering Mastery",
-              "Session 5: AI-Powered Customer Service",
-              "Session 6: Automating Document Review",
-              "Session 7: Risk Assessment & Underwriting AI",
-              "Session 8: Building AI Workflows with No-Code Tools",
-              "Session 9: AI Ethics & Responsible Use",
-              "Session 10: Content Creation with AI",
-              "Session 11: Data Analysis & Insights",
-              "Session 12: Your AI Action Plan"
-            ].map((session, index) => (
-              <div
-                key={index}
-                className="p-4 rounded-lg bg-background border border-border opacity-60"
-                data-testid={`session-placeholder-${index + 2}`}
-              >
-                <p className="font-medium text-sm text-muted-foreground">{session}</p>
-                <p className="text-xs text-muted-foreground mt-2">Coming Soon</p>
-              </div>
-            ))}
-          </div>
-        </CardContent>
-      </Card>
     </div>
   );
 }
