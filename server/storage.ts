@@ -1,6 +1,8 @@
 import { type User, type InsertUser, type AITool, type InsertAITool, type MediaProfile, type InsertMediaProfile, type Workshop, type InsertWorkshop, type Session, type InsertSession, type Prompt, type InsertPrompt, users, aiTools, mediaProfiles, workshops, sessions, prompts } from "@shared/schema";
 import { db } from "./db";
 import { eq, asc, ilike, or, desc } from "drizzle-orm";
+import path from "path";
+import fs from "fs/promises";
 
 export interface IStorage {
   getUser(id: string): Promise<User | undefined>;
@@ -217,6 +219,20 @@ export class DbStorage implements IStorage {
   }
 
   async updateSession(id: string, updates: Partial<InsertSession>): Promise<Session | undefined> {
+    const existingSession = await this.getSessionById(id);
+    
+    if (existingSession && updates.htmlContentUrl && 
+        existingSession.htmlContentUrl?.startsWith("/uploads/workshops/") &&
+        existingSession.htmlContentUrl !== updates.htmlContentUrl) {
+      try {
+        const filename = path.basename(existingSession.htmlContentUrl);
+        const filePath = path.join(process.cwd(), "server", "uploads", "workshops", filename);
+        await fs.unlink(filePath);
+      } catch (error) {
+        console.error(`Failed to delete old file for session ${id}:`, error);
+      }
+    }
+    
     const [session] = await db
       .update(sessions)
       .set(updates)
@@ -226,6 +242,18 @@ export class DbStorage implements IStorage {
   }
 
   async deleteSession(id: string): Promise<void> {
+    const session = await this.getSessionById(id);
+    
+    if (session?.htmlContentUrl && session.htmlContentUrl.startsWith("/uploads/workshops/")) {
+      try {
+        const filename = path.basename(session.htmlContentUrl);
+        const filePath = path.join(process.cwd(), "server", "uploads", "workshops", filename);
+        await fs.unlink(filePath);
+      } catch (error) {
+        console.error(`Failed to delete file for session ${id}:`, error);
+      }
+    }
+    
     await db.delete(sessions).where(eq(sessions.id, id));
   }
 

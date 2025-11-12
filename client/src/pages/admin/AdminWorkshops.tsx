@@ -5,8 +5,10 @@ import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, Di
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
+import { Label } from "@/components/ui/label";
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from "@/components/ui/alert-dialog";
-import { Plus, Edit, Trash2, BookOpen, ChevronDown, ChevronRight } from "lucide-react";
+import { Plus, Edit, Trash2, BookOpen, ChevronDown, ChevronRight, Upload, Link as LinkIcon, Loader2 } from "lucide-react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation, useQuery } from "@tanstack/react-query";
@@ -30,6 +32,9 @@ export default function AdminWorkshops() {
   const [deletingSession, setDeletingSession] = useState<Session | null>(null);
   const [selectedWorkshopId, setSelectedWorkshopId] = useState<string | null>(null);
   const [expandedWorkshops, setExpandedWorkshops] = useState<Set<string>>(new Set());
+  const [contentSource, setContentSource] = useState<"url" | "upload">("url");
+  const [selectedFile, setSelectedFile] = useState<File | null>(null);
+  const [isUploading, setIsUploading] = useState(false);
 
   useEffect(() => {
     if (!sessionLoading && !isAdmin) {
@@ -171,11 +176,43 @@ export default function AdminWorkshops() {
     }
   };
 
-  const onSessionSubmit = (data: InsertSession) => {
-    if (editingSession) {
-      updateSessionMutation.mutate({ id: editingSession.id, data });
-    } else {
-      createSessionMutation.mutate(data);
+  const onSessionSubmit = async (data: InsertSession) => {
+    try {
+      let finalData = { ...data };
+
+      if (contentSource === "upload" && selectedFile) {
+        setIsUploading(true);
+        
+        const formData = new FormData();
+        formData.append("htmlFile", selectedFile);
+
+        const response = await fetch("/api/admin/sessions/upload-html", {
+          method: "POST",
+          body: formData,
+        });
+
+        if (!response.ok) {
+          const error = await response.json();
+          throw new Error(error.message || "Failed to upload file");
+        }
+
+        const uploadResult = await response.json();
+        finalData.htmlContentUrl = uploadResult.path;
+        setIsUploading(false);
+      }
+
+      if (editingSession) {
+        updateSessionMutation.mutate({ id: editingSession.id, data: finalData });
+      } else {
+        createSessionMutation.mutate(finalData);
+      }
+    } catch (error) {
+      setIsUploading(false);
+      toast({
+        title: "Upload Error",
+        description: error instanceof Error ? error.message : "Failed to upload HTML file",
+        variant: "destructive",
+      });
     }
   };
 
@@ -191,6 +228,8 @@ export default function AdminWorkshops() {
   const openCreateSessionDialog = (workshopId: string) => {
     setSelectedWorkshopId(workshopId);
     setIsCreateSessionOpen(true);
+    setContentSource("url");
+    setSelectedFile(null);
     sessionForm.reset({
       workshopId,
       title: "",
@@ -204,6 +243,8 @@ export default function AdminWorkshops() {
 
   const openEditSessionDialog = (session: Session) => {
     setEditingSession(session);
+    setContentSource(session.htmlContentUrl?.startsWith("/uploads/") ? "upload" : "url");
+    setSelectedFile(null);
     sessionForm.reset({
       workshopId: session.workshopId,
       title: session.title,
@@ -394,19 +435,74 @@ export default function AdminWorkshops() {
                   </FormItem>
                 )}
               />
-              <FormField
-                control={sessionForm.control}
-                name="htmlContentUrl"
-                render={({ field }) => (
+              <div className="space-y-4">
+                <FormItem>
+                  <FormLabel>HTML Content Source</FormLabel>
+                  <RadioGroup value={contentSource} onValueChange={(value) => setContentSource(value as "url" | "upload")} className="flex gap-4">
+                    <div className="flex items-center space-x-2">
+                      <RadioGroupItem value="url" id="source-url" data-testid="radio-content-source-url" />
+                      <Label htmlFor="source-url" className="flex items-center gap-2 cursor-pointer">
+                        <LinkIcon className="h-4 w-4" />
+                        URL
+                      </Label>
+                    </div>
+                    <div className="flex items-center space-x-2">
+                      <RadioGroupItem value="upload" id="source-upload" data-testid="radio-content-source-upload" />
+                      <Label htmlFor="source-upload" className="flex items-center gap-2 cursor-pointer">
+                        <Upload className="h-4 w-4" />
+                        Upload HTML
+                      </Label>
+                    </div>
+                  </RadioGroup>
+                </FormItem>
+
+                {contentSource === "url" && (
+                  <FormField
+                    control={sessionForm.control}
+                    name="htmlContentUrl"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>HTML Content URL (optional)</FormLabel>
+                        <FormControl>
+                          <Input {...field} value={field.value || ""} placeholder="/workshops/session1/index.html" data-testid="input-session-html-url" />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                )}
+
+                {contentSource === "upload" && (
                   <FormItem>
-                    <FormLabel>HTML Content URL (optional)</FormLabel>
+                    <FormLabel>Upload HTML File</FormLabel>
                     <FormControl>
-                      <Input {...field} value={field.value || ""} placeholder="/workshops/session1/index.html" data-testid="input-session-html-url" />
+                      <Input
+                        type="file"
+                        accept=".html,text/html"
+                        onChange={(e) => {
+                          const file = e.target.files?.[0];
+                          if (file) {
+                            setSelectedFile(file);
+                            sessionForm.setValue("htmlContentUrl", "");
+                          }
+                        }}
+                        data-testid="input-session-html-file"
+                      />
                     </FormControl>
+                    {selectedFile && (
+                      <p className="text-sm text-muted-foreground">
+                        Selected: {selectedFile.name} ({(selectedFile.size / 1024).toFixed(2)} KB)
+                      </p>
+                    )}
+                    {editingSession && editingSession.htmlContentUrl?.startsWith("/uploads/") && !selectedFile && (
+                      <p className="text-sm text-muted-foreground">
+                        Current file: {editingSession.htmlContentUrl.split("/").pop()}
+                      </p>
+                    )}
                     <FormMessage />
                   </FormItem>
                 )}
-              />
+              </div>
               <FormField
                 control={sessionForm.control}
                 name="videoUrl"
@@ -453,8 +549,15 @@ export default function AdminWorkshops() {
                 >
                   Cancel
                 </Button>
-                <Button type="submit" data-testid="button-save-session">
-                  {editingSession ? "Update" : "Create"}
+                <Button type="submit" disabled={isUploading || (contentSource === "upload" && !selectedFile && !editingSession)} data-testid="button-save-session">
+                  {isUploading ? (
+                    <>
+                      <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                      Uploading...
+                    </>
+                  ) : (
+                    editingSession ? "Update" : "Create"
+                  )}
                 </Button>
               </div>
             </form>

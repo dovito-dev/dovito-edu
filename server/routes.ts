@@ -1,8 +1,11 @@
-import type { Express } from "express";
+import express, { type Express } from "express";
 import { createServer, type Server } from "http";
 import session from "express-session";
 import createMemoryStore from "memorystore";
 import bcrypt from "bcrypt";
+import multer from "multer";
+import path from "path";
+import fs from "fs/promises";
 import { storage } from "./storage";
 import { insertUserSchema, insertAIToolSchema, insertMediaProfileSchema, insertWorkshopSchema, insertSessionSchema, insertPromptSchema } from "@shared/schema";
 import { z } from "zod";
@@ -16,7 +19,40 @@ declare module "express-session" {
   }
 }
 
+const uploadDir = path.join(process.cwd(), "server", "uploads", "workshops");
+
+const uploadStorage = multer.diskStorage({
+  destination: async (_req, _file, cb) => {
+    try {
+      await fs.mkdir(uploadDir, { recursive: true });
+      cb(null, uploadDir);
+    } catch (error) {
+      cb(error as Error, uploadDir);
+    }
+  },
+  filename: (_req, file, cb) => {
+    const uniqueId = `${Date.now()}-${Math.random().toString(36).substring(7)}`;
+    cb(null, `${uniqueId}.html`);
+  },
+});
+
+const upload = multer({
+  storage: uploadStorage,
+  limits: {
+    fileSize: 2 * 1024 * 1024,
+  },
+  fileFilter: (_req, file, cb) => {
+    if (file.mimetype === "text/html" || file.originalname.endsWith(".html")) {
+      cb(null, true);
+    } else {
+      cb(new Error("Only HTML files are allowed"));
+    }
+  },
+});
+
 export async function registerRoutes(app: Express): Promise<Server> {
+  app.use("/uploads", express.static(path.join(process.cwd(), "server", "uploads")));
+
   app.use(
     session({
       secret: process.env.SESSION_SECRET || "dovito-edu-secret-key",
@@ -380,6 +416,31 @@ export async function registerRoutes(app: Express): Promise<Server> {
     } catch (error) {
       res.status(500).json({ message: "Failed to delete workshop" });
     }
+  });
+
+  app.post("/api/admin/sessions/upload-html", requireAdmin, (req, res) => {
+    upload.single("htmlFile")(req, res, (err) => {
+      if (err instanceof multer.MulterError) {
+        if (err.code === "LIMIT_FILE_SIZE") {
+          return res.status(400).json({ message: "File size exceeds 2MB limit" });
+        }
+        return res.status(400).json({ message: `Upload error: ${err.message}` });
+      } else if (err) {
+        return res.status(400).json({ message: err.message || "Only HTML files are allowed" });
+      }
+
+      if (!req.file) {
+        return res.status(400).json({ message: "No file uploaded" });
+      }
+
+      const relativePath = `/uploads/workshops/${req.file.filename}`;
+      
+      res.json({ 
+        path: relativePath,
+        filename: req.file.filename,
+        size: req.file.size,
+      });
+    });
   });
 
   app.post("/api/admin/sessions", requireAdmin, async (req, res) => {
