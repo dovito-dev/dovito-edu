@@ -222,10 +222,19 @@ export async function registerRoutes(app: Express): Promise<Server> {
         const userId = (req.user as any).id;
         req.session.userId = userId;
         console.log("Setting session userId:", userId);
+        
+        req.session.save((err) => {
+          if (err) {
+            console.error("Failed to save session:", err);
+            return res.redirect("/login?auth=error");
+          }
+          console.log("Session saved successfully");
+          res.redirect("/dashboard?auth=success");
+        });
       } else {
         console.log("No user found in OAuth callback");
+        res.redirect("/dashboard?auth=success");
       }
-      res.redirect("/dashboard?auth=success");
     }
   );
 
