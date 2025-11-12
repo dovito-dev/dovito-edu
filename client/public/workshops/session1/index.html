@@ -339,11 +339,17 @@
             cursor: pointer;
             font-size: 24px;
             border-radius: 8px;
-            transition: all 0.3s ease;
+            transition: opacity 0.3s ease, transform 0.3s ease;
             backdrop-filter: blur(10px);
             display: flex;
             align-items: center;
             justify-content: center;
+            opacity: 1;
+        }
+
+        .fullscreen-btn.hidden {
+            opacity: 0;
+            pointer-events: none;
         }
 
         .fullscreen-btn:hover {
@@ -631,6 +637,9 @@
             font-weight: var(--font-weight-normal);
             margin-top: var(--space-16);
             text-align: center;
+            margin-left: auto;
+            margin-right: auto;
+            max-width: 100%;
         }
 
         .highlight {
@@ -992,9 +1001,9 @@
         <div class="zone" data-zone="3">
             <h1>SESSION 1: TALKING TO AI</h1>
             <p class="subtitle">Foundations of AI Communication &amp; Prompt Engineering</p>
-            <div class="content-box" style="margin-top: 60px;">
-                <p style="font-size: 24px; text-align: center; color: rgba(255,255,255,0.9);">Welcome to the official start of our workshop!</p>
-                <p style="font-size: 18px; text-align: center; margin-top: 20px; color: rgba(255,255,255,0.7);">Get ready for an interactive journey through AI communication</p>
+            <div style="margin-top: 60px; width: 100%; display: flex; flex-direction: column; align-items: center;">
+                <p style="font-size: 24px; text-align: center; color: rgba(255,255,255,0.9); max-width: 90%;">Welcome to the official start of our workshop!</p>
+                <p style="font-size: 18px; text-align: center; margin-top: 20px; color: rgba(255,255,255,0.7); max-width: 90%;">Get ready for an interactive journey through AI communication</p>
             </div>
         </div>
 
@@ -1606,6 +1615,63 @@ document.addEventListener('webkitfullscreenchange', updateFullscreenButton);
 document.addEventListener('mozfullscreenchange', updateFullscreenButton);
 document.addEventListener('MSFullscreenChange', updateFullscreenButton);
 updateFullscreenButton();
+
+// Auto-hide fullscreen button on inactivity
+let mouseIdleTimer = null;
+let isMouseIdle = false;
+
+function showFullscreenButton() {
+    if (fullscreenBtn) {
+        fullscreenBtn.classList.remove('hidden');
+        isMouseIdle = false;
+    }
+}
+
+function hideFullscreenButton() {
+    if (fullscreenBtn && isFullscreen()) {
+        fullscreenBtn.classList.add('hidden');
+        isMouseIdle = true;
+    }
+}
+
+function resetMouseIdleTimer() {
+    // Only manage hiding when in fullscreen
+    if (!isFullscreen()) {
+        showFullscreenButton();
+        return;
+    }
+
+    // Show button when mouse moves
+    showFullscreenButton();
+
+    // Clear existing timer
+    if (mouseIdleTimer) {
+        clearTimeout(mouseIdleTimer);
+    }
+
+    // Set new timer to hide after 2 seconds of inactivity
+    mouseIdleTimer = setTimeout(() => {
+        hideFullscreenButton();
+    }, 2000);
+}
+
+// Track mouse movement
+document.addEventListener('mousemove', resetMouseIdleTimer);
+document.addEventListener('mousedown', resetMouseIdleTimer);
+
+// When entering/exiting fullscreen, reset state
+document.addEventListener('fullscreenchange', () => {
+    updateFullscreenButton();
+    if (isFullscreen()) {
+        resetMouseIdleTimer();
+    } else {
+        showFullscreenButton();
+        if (mouseIdleTimer) {
+            clearTimeout(mouseIdleTimer);
+        }
+    }
+});
+
 // Initialize
         updateZone();
         updateResourcesZone();
