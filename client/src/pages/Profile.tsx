@@ -6,10 +6,11 @@ import { Label } from "@/components/ui/label";
 import { UserAvatar } from "@/components/UserAvatar";
 import { useToast } from "@/hooks/use-toast";
 import { Separator } from "@/components/ui/separator";
+import { useSession } from "@/hooks/useSession";
 
 export default function Profile() {
-  const [name, setName] = useState("John Doe");
-  const [email] = useState("john@example.com");
+  const { user } = useSession();
+  const [name, setName] = useState(user?.name || "");
   const [currentPassword, setCurrentPassword] = useState("");
   const [newPassword, setNewPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
@@ -50,10 +51,10 @@ export default function Profile() {
             <CardDescription>Your profile picture</CardDescription>
           </CardHeader>
           <CardContent className="flex flex-col items-center gap-4">
-            <UserAvatar name={name} size="lg" />
+            <UserAvatar name={user?.name || ""} size="lg" />
             <div className="text-center">
-              <p className="font-medium">{name}</p>
-              <p className="text-sm text-muted-foreground">{email}</p>
+              <p className="font-medium">{user?.name || "User"}</p>
+              <p className="text-sm text-muted-foreground">{user?.email}</p>
             </div>
             <p className="text-xs text-center text-muted-foreground">
               Profile pictures are generated from your initials
@@ -83,7 +84,7 @@ export default function Profile() {
                   <Input
                     id="email"
                     type="email"
-                    value={email}
+                    value={user?.email || ""}
                     disabled
                     data-testid="input-email"
                   />
