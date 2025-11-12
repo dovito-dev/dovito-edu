@@ -87,12 +87,18 @@ export async function registerRoutes(app: Express): Promise<Server> {
   });
 
   if (process.env.GOOGLE_CLIENT_ID && process.env.GOOGLE_CLIENT_SECRET) {
+    const callbackURL = process.env.GOOGLE_CALLBACK_URL || "https://edu.dovito.com/auth/google/callback";
+    
+    if (!process.env.GOOGLE_CALLBACK_URL) {
+      console.warn("GOOGLE_CALLBACK_URL not set, using default:", callbackURL);
+    }
+    
     passport.use(
       new GoogleStrategy(
         {
           clientID: process.env.GOOGLE_CLIENT_ID,
           clientSecret: process.env.GOOGLE_CLIENT_SECRET,
-          callbackURL: "/auth/google/callback",
+          callbackURL,
         },
         async (_accessToken, _refreshToken, profile, done) => {
           try {

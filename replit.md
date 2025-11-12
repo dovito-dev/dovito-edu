@@ -63,7 +63,15 @@ Preferred communication style: Simple, everyday language.
 - bcrypt for password hashing (10 rounds)
 - Session-based authentication (no JWT)
 - Password and email-based registration/login
-- Google OAuth planned but not yet implemented
+- Google OAuth fully implemented with Passport.js:
+  * Callback URL: Configurable via `GOOGLE_CALLBACK_URL` environment variable
+  * Default callback: `https://edu.dovito.com/auth/google/callback` (production)
+  * Email-based account linking (links existing accounts by email or creates new ones)
+  * Required environment variables:
+    - `GOOGLE_CLIENT_ID` - Google OAuth client ID
+    - `GOOGLE_CLIENT_SECRET` - Google OAuth client secret
+    - `GOOGLE_CALLBACK_URL` (optional) - Full callback URL for OAuth redirect
+  * Success/error feedback via toast notifications
 - User initials-based avatars (no profile picture uploads to avoid storage costs)
 
 ### Data Storage
@@ -74,7 +82,9 @@ Preferred communication style: Simple, everyday language.
 - Schema defined in `/shared/schema.ts`
 
 **Schema Design:**
-- `users` table with fields: id (UUID), email (unique), password (hashed), name (optional)
+- `users` table with fields: id (UUID), email (unique), password (nullable, hashed), name (optional), googleId (nullable)
+- Password is nullable to support OAuth-only users
+- googleId stores Google OAuth user identifier for account linking
 - Zod schemas for validation (insertUserSchema)
 - Shared types between client and server via `/shared` directory
 
@@ -114,6 +124,7 @@ Preferred communication style: Simple, everyday language.
 - bcrypt for password hashing
 - express-session for session management
 - connect-pg-simple for PostgreSQL session store (installed but using MemoryStore)
+- passport and passport-google-oauth20 for Google OAuth integration
 
 **Form Management:**
 - React Hook Form with @hookform/resolvers
@@ -129,7 +140,12 @@ Preferred communication style: Simple, everyday language.
 - Clipboard API for copy-to-clipboard features
 - Automatic backlinks to platform URL
 
+**Recent Changes (November 12, 2025):**
+- Implemented Google OAuth authentication with email-based account linking
+- Updated database schema to support OAuth users (googleId field, nullable password)
+- Configured callback URL for production domain: `https://edu.dovito.com/auth/google/callback`
+- Added toast notifications for auth success/error feedback
+- Fixed session management to ensure OAuth users are properly authenticated
+
 **Future Integrations:**
-- Google OAuth (planned but not implemented)
 - Google Analytics GA4 (mentioned in requirements)
-- GitHub Pages hosting (mentioned in original requirements but current setup uses Node.js server)
